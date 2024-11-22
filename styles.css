@@ -1,49 +1,95 @@
-/* Style for the entire page */
+/* General reset for consistent rendering across browsers */
 body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4; /* Light gray background */
+    background-color: #f9f9f9;
+    color: #333;
 }
 
-/* Header styling */
-header {
-    background-color: #0078D7; /* Blue header */
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    font-size: 1.5rem;
-    font-weight: bold;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-/* Main container */
-main {
+/* Style for the page container */
+.container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-/* Map container */
-#map {
-    width: 100%;
-    height: 100vh; /* Full viewport height */
-    border: 1px solid black; /* Black border for better visibility */
-    margin-top: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for elevation */
-}
-
-/* Footer styling */
-footer {
-    background-color: #0078D7; /* Matching footer color */
-    color: white;
+/* Style for the header section */
+header {
     text-align: center;
-    padding: 5px 10px;
-    font-size: 0.9rem;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    max-width: 800px; /* Ensures consistent line length for text */
+    margin-bottom: 30px;
+}
+
+/* Title style */
+h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: #222;
+}
+
+/* Blockquote style */
+blockquote {
+    font-style: italic;
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+/* Blockquote text style */
+blockquote p {
+    margin: 0;
+}
+
+/* Paragraph style for additional text */
+header p {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    color: #444;
+    line-height: 1.6;
+    text-align: justify; /* Smooth alignment of text */
+    margin: 0;
+}
+
+/* Map container style */
+#map {
+    width: 90%; /* Wider than text */
+    max-width: 1200px; /* Restrict excessive width */
+    height: 780px; /* Set a proportional height */
+    margin-top: 30px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+#control-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.control-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0 5px;
+    background-color: white;
+    color: #333;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.control-btn.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #0056b3;
+}
+
+.control-btn:hover {
+    background-color: #0056b3;
+    color: white;
 }
 
