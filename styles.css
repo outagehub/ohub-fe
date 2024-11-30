@@ -1,95 +1,167 @@
-/* General reset for consistent rendering across browsers */
+/* General Styling */
 body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    color: #333;
 }
 
-/* Style for the page container */
+/* Container */
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
 }
 
-/* Style for the header section */
+/* Header Section */
 header {
     text-align: center;
-    max-width: 800px; /* Ensures consistent line length for text */
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
-/* Title style */
-h1 {
+header h1 {
     font-family: 'Playfair Display', serif;
-    font-size: 3rem;
-    margin-bottom: 20px;
+    font-size: 36px;
+    margin-bottom: 10px;
     color: #222;
 }
 
-/* Blockquote style */
-blockquote {
+header blockquote {
     font-style: italic;
-    font-size: 1.2rem;
     color: #555;
-    margin-bottom: 20px;
-    line-height: 1.4;
-}
-
-/* Blockquote text style */
-blockquote p {
-    margin: 0;
-}
-
-/* Paragraph style for additional text */
-header p {
-    font-family: 'Roboto', sans-serif;
-    font-size: 1rem;
-    color: #444;
-    line-height: 1.6;
-    text-align: justify; /* Smooth alignment of text */
-    margin: 0;
-}
-
-/* Map container style */
-#map {
-    width: 90%; /* Wider than text */
-    max-width: 1200px; /* Restrict excessive width */
-    height: 780px; /* Set a proportional height */
-    margin-top: 30px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-}
-
-#control-container {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.control-btn {
-    padding: 10px 20px;
+    margin: 10px 0;
     font-size: 16px;
-    border: 2px solid #ddd;
-    border-radius: 5px;
+}
+
+header p {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.feedback-link {
+    font-size: 16px;
+    margin-top: 15px;
+}
+
+.feedback-link a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.feedback-link a:hover {
+    text-decoration: underline;
+}
+
+/* Search and Controls */
+#searchBar,
+#controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+#searchBar {
+    align-items: center;
+}
+
+#searchBar label {
+    font-size: 14px;
+    margin-right: 5px;
+}
+
+#searchBar input[type="text"] {
+    flex: 1;
+    max-width: 300px;
+    padding: 8px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#searchBar button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    font-size: 14px;
     cursor: pointer;
-    margin: 0 5px;
-    background-color: white;
-    color: #333;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.3s ease;
 }
 
-.control-btn.active {
-    background-color: #007bff;
-    color: white;
-    border-color: #0056b3;
-}
-
-.control-btn:hover {
+#searchBar button:hover {
     background-color: #0056b3;
-    color: white;
+}
+
+#controls label {
+    font-size: 14px;
+}
+
+#controls input[type="date"],
+#controls input[type="time"] {
+    padding: 8px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-width: 160px;
+}
+
+#controls button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#controls button:hover {
+    background-color: #0056b3;
+}
+
+/* Map */
+#map {
+    width: 100%;
+    height: 600px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-top: 20px;
+}
+
+/* Feedback Form */
+.feedback-form {
+    margin-top: 20px; /* Add spacing between the map and the form */
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+    max-width: 600px; /* Limit the width of the form */
+    margin-left: auto; /* Center align the form */
+    margin-right: auto; /* Center align the form */
+}
+
+.feedback-form h2 {
+    font-size: 20px; /* Slightly smaller heading */
+    margin-bottom: 10px;
+}
+
+.feedback-form p {
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #555;
+}
+
+.feedback-form iframe {
+    width: 100%; /* Make the iframe take the full width of the form */
+    height: 400px; /* Reduce the height of the iframe */
+    border: none;
+    border-radius: 4px;
 }
 

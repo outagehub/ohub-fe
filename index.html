@@ -6,26 +6,69 @@
     <title>Canadian Power Outages</title>
     <link rel="stylesheet" href="/styles.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/3.3.0/luxon.min.js"
+    integrity="sha512-KKbQg5o92MwtJKR9sfm/HkREzfyzNMiKPIQ7i7SZOxwEdiNCm4Svayn2DBq7MKEdrqPJUOSIpy1v6PpFlCQ0YA==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400&display=swap" rel="stylesheet">
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8FX82J8YGR"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-8FX82J8YGR');
+    </script>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>Canadian Power Outages</h1>
-            <blockquote>
-                <p>“Without passion, you don’t have energy. Without energy, you have nothing.” - Warren Buffett</p>
-            </blockquote>
-		<p>
-    The Canadian Power Outages map provides a real-time view of outages across the country. 
-    Stay informed, understand the impact on your community, and explore areas experiencing power disruptions. 
-    Access the latest information and gain a better understanding of how power 
-    outages affect communities across Canada.
-</p>
+            <p>
+                The Canadian Power Outages map provides a real-time view of outages across the country. 
+                Stay informed, understand the impact on your community, and explore areas experiencing power disruptions. 
+                Access the latest information and gain a better understanding of how power 
+                outages affect communities across Canada.
+		This website is currently under active development, with frequent updates and improvements. Thank you for your patience.
+            </p>
+            <p class="feedback-link">
+                <strong>Have feedback or a feature you want to be added?</strong> 
+                <a href="#feedbackForm">Click here</a>
+            </p>
+        </header>
 
-	</header>
+        <!-- Search bar for address -->
+        <div id="searchBar" class="search-bar">
+            <label for="searchInput">Search Address:</label>
+            <input type="text" id="searchInput" placeholder="Enter address">
+            <button id="searchButton">Search</button>
+        </div>
+
+        <!-- Controls for selecting date and time -->
+        <div id="controls" class="controls">
+            <label for="datePicker">Select Date:</label>
+            <input type="date" id="datePicker" value="">
+            <label for="timePicker">Select Time:</label>
+            <input type="time" id="timePicker" value="">
+            <button id="applyButton" class="apply-btn">Apply</button>
+        </div>
+
+        <!-- Map container -->
         <div id="map"></div>
+
+        <!-- Feedback form -->
+        <div id="feedbackForm" class="feedback-form">
+            <h2>Feedback Form</h2>
+            <p>If you have feedback or feature requests, please fill out the form below:</p>
+            <iframe 
+                src="https://docs.google.com/forms/d/e/1FAIpQLSf0NhnloXoHL7QyBEaxBkDRD1WHxXGBn5XCxSoivi8eOKXC1A/viewform?embedded=true" 
+                frameborder="0">
+                Loading…
+            </iframe>
+        </div>
     </div>
+    
     <script src="/script.js"></script>
 </body>
 </html>
