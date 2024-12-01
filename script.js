@@ -172,6 +172,29 @@ async function geocodeAddressNominatim(address) {
     }
 }
 
+async function getOutages(timestamp) {
+    try {
+        const url = timestamp ? `/outages?timestamp=${encodeURIComponent(timestamp)}` : "/outages";
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`Error fetching outages: ${response.status}`);
+        }
+
+        const outages = await response.json();
+
+        if (!Array.isArray(outages)) {
+            console.error("Outages data is not an array:", outages);
+            return [];
+        }
+
+        return outages;
+    } catch (error) {
+        console.error("Error fetching outages:", error);
+        return [];
+    }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
     // Initialize the map
     const map = initializeMap();
@@ -198,19 +221,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     displayOutages(outages, map);
 
     // Apply filter for date and time
-    document.getElementById("applyButton").addEventListener("click", async () => {
-        const selectedDate = document.getElementById("datePicker").value;
-        const selectedTime = document.getElementById("timePicker").value;
+document.getElementById("applyButton").addEventListener("click", async () => {
+    const applyButton = document.getElementById("applyButton");
+    const selectedDate = document.getElementById("datePicker").value;
+    const selectedTime = document.getElementById("timePicker").value;
 
-        if (selectedDate && selectedTime) {
-            const timestamp = new Date(`${selectedDate}T${selectedTime}`).toISOString();
-            const filteredOutages = await fetchOutages(timestamp);
-            clearMap(map);
-            displayOutages(filteredOutages, map);
-        } else {
-            alert("Please select both date and time.");
-        }
-    });
+    if (!selectedDate || !selectedTime) {
+        alert("Please select both date and time.");
+        return;
+    }
+
+    // Disable the button to prevent multiple clicks
+    applyButton.disabled = true;
+    applyButton.textContent = "Loading...";
+
+    try {
+        const timestamp = new Date(`${selectedDate}T${selectedTime}`).toISOString();
+        const filteredOutages = await getOutages(timestamp);
+
+        clearMap(map); // Clear existing markers/polygons
+        displayOutages(filteredOutages, map); // Display new data
+    } catch (error) {
+        console.error("Error fetching or displaying outages:", error);
+        alert("An error occurred while fetching outages. Please try again.");
+    } finally {
+        // Re-enable the button after processing
+        applyButton.disabled = false;
+        applyButton.textContent = "Apply";
+    }
+});
 
     // Handle search bar functionality
     document.getElementById("searchButton").addEventListener("click", async () => {
