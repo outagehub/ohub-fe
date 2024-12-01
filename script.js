@@ -109,9 +109,10 @@ function displayOutages(outages, map) {
 
         markers.addLayer(marker);
 
-        // Optionally, handle polygons if needed
+        // Handle polygons if needed
         if (Array.isArray(outage.polygon) && outage.polygon.length > 0) {
             const polygonCoords = formatPolygonCoords(outage.polygon);
+
             const validCoords = polygonCoords.filter(
                 (coord) =>
                     Array.isArray(coord) &&
@@ -128,18 +129,36 @@ function displayOutages(outages, map) {
                 }).bindPopup(popupContent);
 
                 polygon.addTo(map);
+            } else {
+                if (outage.power_company === "Quebec Hydro") {
+                    console.warn("Quebec Hydro: Invalid or incomplete polygon data for outage ID:", outage.id);
+                }
             }
         }
     });
 
-    // Add the cluster group to the map
+    // Add markers to the map
     map.addLayer(markers);
 }
 
 function formatPolygonCoords(flatCoords) {
+    if (
+        Array.isArray(flatCoords) &&
+        Array.isArray(flatCoords[0]) &&
+        flatCoords[0].length === 2 &&
+        typeof flatCoords[0][0] === "number" &&
+        typeof flatCoords[0][1] === "number"
+    ) {
+        return flatCoords; // Return as-is if already in the correct format
+    }
+
     const formattedCoords = [];
     for (let i = 0; i < flatCoords.length; i += 2) {
-        formattedCoords.push([flatCoords[i + 1], flatCoords[i]]);
+        if (flatCoords[i + 1] !== undefined && flatCoords[i] !== undefined) {
+            formattedCoords.push([flatCoords[i + 1], flatCoords[i]]); // Swap latitude and longitude
+        } else {
+            console.warn("Invalid coordinate pair found:", flatCoords[i], flatCoords[i + 1]);
+        }
     }
     return formattedCoords;
 }
