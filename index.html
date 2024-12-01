@@ -10,7 +10,7 @@
     integrity="sha512-KKbQg5o92MwtJKR9sfm/HkREzfyzNMiKPIQ7i7SZOxwEdiNCm4Svayn2DBq7MKEdrqPJUOSIpy1v6PpFlCQ0YA==" 
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <!-- Leaflet MarkerCluster CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
@@ -29,29 +29,45 @@
     </script>
 </head>
 <body>
+ <!-- Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <!-- Logo -->
+            <div class="logo">
+                <span>Canadian Power Outages</span>
+            </div>
+            
+            <!-- Navigation Links -->
+            <nav class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/api-access" class="nav-link">API Access</a>
+                <a href="/feedback" class="nav-link">Feedback Form</a>
+                <a href="https://buymeacoffee.com/andrewgordienko" class="nav-link" target="_blank" rel="noopener noreferrer">Want to Buy Me a Coffee?</a>
+
+            </nav>
+        </div>
+    </header>
+
     <div class="container">
-        <header>
-            <h1>Canadian Power Outages</h1>
-            <p>
-                The Canadian Power Outages map provides a real-time view of outages across the country. 
-                Stay informed, understand the impact on your community, and explore areas experiencing power disruptions. 
-                Access the latest information and gain a better understanding of how power 
-                outages affect communities across Canada.
-		This website is currently under active development, with frequent updates and improvements. Thank you for your patience.
-            </p>
-            <p class="feedback-link">
-                <strong>Have feedback or a feature you want to be added?</strong> 
-                <a href="#feedbackForm">Click here</a>
-            </p>
-        </header>
+        <section>
+            <h1>Welcome to Canadian Power Outages</h1>
+	    <p>
+    Discover real-time updates on power outages across Canada with our interactive map. 
+    Stay informed about disruptions in your area, understand their impact on communities, 
+    and explore the latest outage data. Our platform provides up-to-date information to help 
+    you navigate power outages effectively. We're continuously improving and enhancing this website, 
+    so thank you for your patience as we work to deliver the best experience.
+</p>
+
+	</section>
 
         <!-- Search bar for address -->
         <div id="searchBar" class="search-bar">
             <label for="searchInput">Search Address:</label>
             <input type="text" id="searchInput" placeholder="Enter address">
             <button id="searchButton">Search</button>
-        </div>
-
+        </div>         
+        
         <!-- Controls for selecting date and time -->
         <div id="controls" class="controls">
             <label for="datePicker">Select Date:</label>
@@ -62,18 +78,8 @@
         </div>
 
         <!-- Map container -->
-        <div id="map"></div>
+        <div id="map" style="height: 90vh; width: 100%;"></div>
 
-        <!-- Feedback form -->
-        <div id="feedbackForm" class="feedback-form">
-            <h2>Feedback Form</h2>
-            <p>If you have feedback or feature requests, please fill out the form below:</p>
-            <iframe 
-                src="https://docs.google.com/forms/d/e/1FAIpQLSf0NhnloXoHL7QyBEaxBkDRD1WHxXGBn5XCxSoivi8eOKXC1A/viewform?embedded=true" 
-                frameborder="0">
-                Loading…
-            </iframe>
-        </div>
     </div>
     
     <script src="/script.js"></script>

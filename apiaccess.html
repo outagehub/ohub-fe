@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Access - Canadian Power Outages</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+        }
+        pre {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+        }
+        .comment {
+            color: #6272a4;
+        }
+        .keyword {
+            color: #ff79c6;
+        }
+        .string {
+            color: #f1fa8c;
+        }
+        .function {
+            color: #50fa7b;
+        }
+        .highlight {
+            color: #007bff;
+            font-weight: bold;
+        }
+        .email {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .email:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <!-- Logo -->
+            <div class="logo">
+                <span>Canadian Power Outages</span>
+            </div>
+            
+            <!-- Navigation Links -->
+            <nav class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/api-access" class="nav-link">API Access</a>
+                <a href="/feedback" class="nav-link">Feedback Form</a>
+                <a href="https://buymeacoffee.com/andrewgordienko" class="nav-link" target="_blank" rel="noopener noreferrer">Want to Buy Me a Coffee?</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>API Access</h1>
+        <p>
+            At <span class="highlight">Canadian Power Outages</span>, we understand two major challenges surrounding Quebec power outages:
+        </p>
+        <ul>
+            <li>Finding an API that stays up to date with the latest information about outages.</li>
+            <li>Being able to pass in latitude, longitude, and a distance to check if an outage exists in a specific area.</li>
+        </ul>
+        <p>
+            We’ve built an <span class="highlight">API</span> that solves both problems:
+        </p>
+        <ul>
+            <li>Our data updates <span class="highlight">every 5 minutes</span>, ensuring you have the latest outage information.</li>
+            <li>You can pass a latitude, longitude, and distance to quickly determine if there’s an outage in the area.</li>
+        </ul>
+        
+        <h2>Code Example</h2>
+        <p>
+            Below is an example of how you can use our API. The endpoints are:
+            <ul>
+                <li><code>/hydro-outages</code>: Get the latest information about outages.</li>
+                <li><code>/outages-nearby</code>: Check if there’s an outage near a specific location.</li>
+            </ul>
+        </p>
+        <pre><code class="python"><span class="comment"># Import necessary libraries</span>
+<span class="keyword">import</span> requests
+<span class="keyword">import</span> time
+
+<span class="comment"># API configuration</span>
+API_KEY = <span class="string">"your-api-key"</span>
+API_HYDRO_OUTAGES_URL = <span class="string">"http://canadianpoweroutages.ca:9000/hydro-outages"</span>
+API_OUTAGES_NEARBY_URL = <span class="string">"http://canadianpoweroutages.ca:9000/outages-nearby"</span>
+
+<span class="comment"># Headers for the API request</span>
+headers = {<span class="string">"X-API-KEY"</span>: API_KEY}
+
+<span class="keyword">def</span> <span class="function">test_api</span>():
+    <span class="comment">"""
+    Test the /hydro-outages API endpoint.
+    Measures the API response time and validates the response format.
+    """</span>
+    <span class="keyword">try</span>:
+        start_time = time.time()  <span class="comment"># Record the start time</span>
+        response = requests.get(API_HYDRO_OUTAGES_URL, headers=headers)
+        response.raise_for_status()  <span class="comment"># Raise an exception for HTTP errors</span>
+        elapsed_time = time.time() - start_time  <span class="comment"># Calculate elapsed time</span>
+        data = response.json()
+        total_outages = data.get(<span class="string">"total_outages"</span>, 0)
+        print(<span class="string">f"Total Outages: {total_outages}"</span>)
+        print(<span class="string">f"API call took {elapsed_time:.2f} seconds"</span>)
+    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:
+        print(<span class="string">f"An error occurred: {e}"</span>)
+
+<span class="keyword">def</span> <span class="function">test_outages_nearby</span>(lat, lon, distance_km):
+    <span class="comment">"""
+    Test the /outages-nearby API endpoint.
+    Validates the functionality with the given latitude, longitude, and distance.
+    """</span>
+    <span class="keyword">try</span>:
+        start_time = time.time()
+        response = requests.get(
+            API_OUTAGES_NEARBY_URL,
+            headers=headers,
+            params={<span class="string">"lat"</span>: lat, <span class="string">"lon"</span>: lon, <span class="string">"distance_km"</span>: distance_km}
+        )
+        response.raise_for_status()
+        elapsed_time = time.time() - start_time
+        data = response.json()
+        print(<span class="string">f"Nearby Outage Found: {data['nearby_outage']}"</span>)
+        print(<span class="string">f"API call took {elapsed_time:.2f} seconds"</span>)
+        <span class="keyword">return</span> data[<span class="string">'nearby_outage'</span>]
+    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:
+        print(<span class="string">f"An error occurred: {e}"</span>)
+</code></pre>
+
+        <h2>Performance</h2>
+        <p>
+            Here’s the current performance for our API:
+        </p>
+        <pre>
+API call took 0.29 seconds
+
+Testing /outages-nearby API for True case...
+Nearby Outage Found: True
+API call took 0.10 seconds
+
+Testing /outages-nearby API for False case...
+Nearby Outage Found: False
+API call took 0.10 seconds
+        </pre>
+
+        <h2>Get Access</h2>
+        <p>
+            We’re excited for you to use our API! To request access, email us at <a href="mailto:andrew@canadianpoweroutages.ca" class="email">andrew@canadianpoweroutages.ca</a>. We’ll provide you with an API key and discuss your use case to see if there's anything else we can provide you or help you with.
+        </p>
+    </div>
+</body>
+</html>
+
