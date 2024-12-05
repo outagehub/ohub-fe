@@ -163,6 +163,91 @@ function formatPolygonCoords(flatCoords) {
     return formattedCoords;
 }
 
+function displayWeatherAlerts(map) {
+    const grayPolygonStyle = {
+        color: "gray",
+        weight: 2,
+        fillOpacity: 0.3,
+    };
+
+    // Fetch the weather alerts data
+    fetch('/weather-alerts')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(alerts => {
+            console.log(`Alerts data fetched successfully: ${alerts.length} alerts.`);
+
+            alerts.forEach(alert => {
+                const { id, polygon, text, issue_time, expiry } = alert;
+
+                console.log(`Processing alert ID: ${id}`);
+                if (!Array.isArray(polygon) || polygon.length === 0) {
+                    console.warn(`No valid polygon data for alert ID: ${id}. Skipping...`);
+                    return;
+                }
+
+                // Process each polygon
+                polygon.forEach((subPolygon, subPolygonIndex) => {
+                    console.log(`Processing polygon #${subPolygonIndex} for alert ID: ${id}`);
+
+                    // Swap coordinates and round them
+                    const swappedCoords = subPolygon.map(coord => {
+                        if (Array.isArray(coord) && coord.length === 2) {
+                            return [
+                                parseFloat(coord[1].toFixed(6)), // Latitude
+                                parseFloat(coord[0].toFixed(6))  // Longitude
+                            ];
+                        }
+                        return null; // Mark invalid coordinates for filtering
+                    }).filter(coord => coord !== null);
+
+                    // Add polygon to the map
+                    if (swappedCoords.length > 2) {
+                        const popupContent = `
+                            <b>Alert:</b> ${text}<br>
+                            <b>Issue Time:</b> ${new Date(issue_time).toLocaleString()}<br>
+                            <b>Expiry:</b> ${new Date(expiry).toLocaleString()}
+                        `;
+                        const polygonLayer = L.polygon(swappedCoords, grayPolygonStyle).bindPopup(popupContent);
+                        polygonLayer.addTo(map);
+                        console.log(`Polygon layer added for alert ID: ${id}, polygon #${subPolygonIndex}`);
+                    } else {
+                        console.warn(`Not enough valid coordinates for polygon layer for alert ID: ${id}, polygon #${subPolygonIndex}`);
+                    }
+                });
+            });
+        })
+        .catch(error => {
+            console.error(`Error fetching weather alerts: ${error.message}`);
+        });
+}
+
+function formatPolygonCoords(flatCoords) {
+    if (
+        Array.isArray(flatCoords) &&
+        Array.isArray(flatCoords[0]) &&
+        flatCoords[0].length === 2 &&
+        typeof flatCoords[0][0] === "number" &&
+        typeof flatCoords[0][1] === "number"
+    ) {
+        return flatCoords; // Return as-is if already in the correct format
+    }
+
+    const formattedCoords = [];
+    for (let i = 0; i < flatCoords.length; i += 2) {
+        if (flatCoords[i + 1] !== undefined && flatCoords[i] !== undefined) {
+            formattedCoords.push([flatCoords[i + 1], flatCoords[i]]); // Swap latitude and longitude
+        } else {
+            console.warn("Invalid coordinate pair found:", flatCoords[i], flatCoords[i + 1]);
+        }
+    }
+    return formattedCoords;
+}
+
 async function geocodeAddressNominatim(address) {
     const nominatimUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
 
@@ -217,7 +302,7 @@ async function getOutages(timestamp) {
 document.addEventListener("DOMContentLoaded", async () => {
     // Initialize the map
     const map = initializeMap();
-
+    
     // Fetch preloaded outages and display them
     async function fetchPreloadedOutages() {
         try {
@@ -238,6 +323,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const outages = await fetchPreloadedOutages();
     displayOutages(outages, map);
+    displayWeatherAlerts(map);
 
     // Apply filter for date and time
 document.getElementById("applyButton").addEventListener("click", async () => {
