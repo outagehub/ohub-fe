@@ -13,7 +13,7 @@ function formatTimestamp(dateInput, powerCompany) {
         date = new Date(timestamp);
     } else if (
         ["Quebec Hydro", "Manitoba Hydro", "Algoma Power", "EPCOR Ontario", 
-        "Equs Alberta", "FortisBC", "Hydro Ottawa", "ENMAX Calgary"].includes(powerCompany)
+        "Equs Alberta", "FortisBC", "Hydro Ottawa", "ENMAX Calgary", "Hydro One"].includes(powerCompany)
     ) {
         date = new Date(dateInput);
     } else {
@@ -85,7 +85,16 @@ function displayOutages(outages, map) {
 
     // Loop through outages and add markers to the cluster group
     outages.forEach((outage) => {
-        const formattedDateOff = formatTimestamp(outage.date_off, outage.power_company);
+	if (outage.power_company === "Hydro One") {
+    		console.log(`Power Company: ${outage.power_company}`);
+    		console.log(`Outage: ${JSON.stringify(outage)}`);
+		
+		const temp = outage.latitude;
+    		outage.latitude = outage.longitude;
+    		outage.longitude = temp;
+	}
+
+	const formattedDateOff = formatTimestamp(outage.date_off, outage.power_company);
         const formattedCrewEta = formatTimestamp(outage.crew_eta, outage.power_company);
         const formattedTimestampAdded = formatTimestampWithUserTimeZone(outage.time_stamp);
 
@@ -110,8 +119,9 @@ function displayOutages(outages, map) {
         markers.addLayer(marker);
 
         // Handle polygons if needed
-        if (Array.isArray(outage.polygon) && outage.polygon.length > 0) {
-            const polygonCoords = formatPolygonCoords(outage.polygon);
+        if (outage.power_company !== "Hydro One" && Array.isArray(outage.polygon) && outage.polygon.length > 0) {
+
+	    const polygonCoords = formatPolygonCoords(outage.polygon);
 
             const validCoords = polygonCoords.filter(
                 (coord) =>
