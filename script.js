@@ -175,7 +175,7 @@ function formatPolygonCoords(flatCoords) {
 
 function displayWeatherAlerts(map) {
     const grayPolygonStyle = {
-        color: "gray",
+        color: "#FFD700",
         weight: 2,
         fillOpacity: 0.3,
     };
