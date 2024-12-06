@@ -180,6 +180,9 @@ function displayWeatherAlerts(map) {
         fillOpacity: 0.3,
     };
 
+    // Array to store the added layers
+    const weatherAlertLayers = [];
+
     // Fetch the weather alerts data
     fetch('/weather-alerts')
         .then(response => {
@@ -224,6 +227,10 @@ function displayWeatherAlerts(map) {
                         `;
                         const polygonLayer = L.polygon(swappedCoords, grayPolygonStyle).bindPopup(popupContent);
                         polygonLayer.addTo(map);
+
+                        // Add the polygon layer to the array
+                        weatherAlertLayers.push(polygonLayer);
+
                         console.log(`Polygon layer added for alert ID: ${id}, polygon #${subPolygonIndex}`);
                     } else {
                         console.warn(`Not enough valid coordinates for polygon layer for alert ID: ${id}, polygon #${subPolygonIndex}`);
@@ -234,6 +241,9 @@ function displayWeatherAlerts(map) {
         .catch(error => {
             console.error(`Error fetching weather alerts: ${error.message}`);
         });
+
+    // Return the array of layers
+    return weatherAlertLayers;
 }
 
 function formatPolygonCoords(flatCoords) {
@@ -312,8 +322,61 @@ async function getOutages(timestamp) {
 document.addEventListener("DOMContentLoaded", async () => {
     // Initialize the map
     const map = initializeMap();
-    
-    // Fetch preloaded outages and display them
+
+    // Track whether weather alerts are currently displayed
+    let weatherAlertsVisible = false;
+    let weatherAlertLayers = []; // Store the layers for weather alerts
+
+    // Fetch and display outages immediately on page load
+    (async () => {
+        try {
+            const outages = await fetchPreloadedOutages();
+            displayOutages(outages, map);
+        } catch (error) {
+            console.error("Error loading preloaded outages:", error);
+        }
+    })();
+
+    // Button and Loading Elements
+    const weatherAlertButton = document.getElementById("weatherAlertButton");
+    const loadingMessage = document.getElementById("loadingMessage");
+
+    // Handle weather alerts button click
+    weatherAlertButton.addEventListener("click", async () => {
+        // If weather alerts are visible, remove them and toggle state
+        if (weatherAlertsVisible) {
+            weatherAlertLayers.forEach(layer => map.removeLayer(layer)); // Remove layers from map
+            weatherAlertLayers = []; // Clear layers array
+            weatherAlertsVisible = false; // Set visibility to false
+            weatherAlertButton.textContent = "Show Weather Alerts"; // Update button text
+            return; // Exit early
+        }
+
+        // Show loading message
+        loadingMessage.style.display = "block";
+        weatherAlertButton.disabled = true;
+        weatherAlertButton.style.backgroundColor = "#999";
+
+        try {
+            // Simulate lag effect before displaying weather alerts
+            await new Promise(resolve => setTimeout(resolve, 500)); // Add a 500ms delay
+
+            // Fetch and display weather alerts
+            const layers = await displayWeatherAlerts(map);
+            weatherAlertLayers = layers; // Store displayed layers
+            weatherAlertsVisible = true; // Set visibility to true
+            weatherAlertButton.textContent = "Hide Weather Alerts"; // Update button text
+        } catch (error) {
+            console.error("Error loading weather alerts:", error);
+        } finally {
+            // Hide loading message and re-enable button
+            loadingMessage.style.display = "none";
+            weatherAlertButton.disabled = false;
+            weatherAlertButton.style.backgroundColor = "#007BFF";
+        }
+    });
+
+    // Fetch preloaded outages
     async function fetchPreloadedOutages() {
         try {
             const response = await fetch("/preloaded-outages");
@@ -330,10 +393,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             return [];
         }
     }
-
-    const outages = await fetchPreloadedOutages();
-    displayOutages(outages, map);
-    displayWeatherAlerts(map);
 
     // Apply filter for date and time
 document.getElementById("applyButton").addEventListener("click", async () => {

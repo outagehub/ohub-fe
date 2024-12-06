@@ -6,44 +6,33 @@
     <title>Canadian Power Outages</title>
     <link rel="stylesheet" href="/styles.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/3.3.0/luxon.min.js"
-    integrity="sha512-KKbQg5o92MwtJKR9sfm/HkREzfyzNMiKPIQ7i7SZOxwEdiNCm4Svayn2DBq7MKEdrqPJUOSIpy1v6PpFlCQ0YA==" 
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Leaflet MarkerCluster CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
-
-    <!-- Leaflet MarkerCluster JavaScript -->
     <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8FX82J8YGR"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-8FX82J8YGR');
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-8FX82J8YGR');
     </script>
 </head>
 <body>
- <!-- Header -->
+    <!-- Header -->
     <header class="main-header">
         <div class="header-container">
-            <!-- Logo -->
             <div class="logo">
                 <span>Canadian Power Outages</span>
             </div>
-            
-            <!-- Navigation Links -->
             <nav class="nav-links">
                 <a href="/" class="nav-link">Home</a>
                 <a href="/api-access" class="nav-link">API Access</a>
                 <a href="/feedback" class="nav-link">Feedback Form</a>
                 <a href="https://buymeacoffee.com/andrewgordienko" class="nav-link" target="_blank" rel="noopener noreferrer">Want to Buy Me a Coffee?</a>
-
             </nav>
         </div>
     </header>
@@ -51,15 +40,13 @@
     <div class="container">
         <section>
             <h1>Welcome to Canadian Power Outages</h1>
-	    <p>
-    Discover real-time updates on power outages across Canada with our interactive map. 
-    Stay informed about disruptions in your area, understand their impact on communities, 
-    and explore the latest outage data. Our platform provides up-to-date information to help 
-    you navigate power outages effectively. We're continuously improving and enhancing this website, 
-    so thank you for your patience as we work to deliver the best experience.
-</p>
-
-	</section>
+            <p>
+                Discover real-time updates on power outages across Canada with our interactive map. 
+                Stay informed about disruptions in your area, understand their impact on communities, and explore the latest outage data. Our platform provides up-to-date information to help 
+                you navigate power outages effectively. We're continuously improving and enhancing this website, 
+                so thank you for your patience as we work to deliver the best experience.
+            </p>
+        </section>
 
         <!-- Search bar for address -->
         <div id="searchBar" class="search-bar">
@@ -67,7 +54,7 @@
             <input type="text" id="searchInput" placeholder="Enter address">
             <button id="searchButton">Search</button>
         </div>         
-        
+
         <!-- Controls for selecting date and time -->
         <div id="controls" class="controls">
             <label for="datePicker">Select Date:</label>
@@ -77,9 +64,24 @@
             <button id="applyButton" class="apply-btn">Apply</button>
         </div>
 
+        <!-- Button for weather alerts -->
+        <div style="margin-bottom: 10px; display: flex; justify-content: flex-start; align-items: center;">
+            <button id="weatherAlertButton" style="
+                padding: 10px;
+                background-color: #007BFF;
+                color: #FFF;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                font-size: 14px;">
+                Show Weather Alerts
+            </button>
+            <span id="loadingMessage" style="margin-left: 10px; font-size: 14px; color: #555; display: none;">Loading...</span>
+        </div>
+
         <!-- Map container -->
         <div id="map" style="height: 90vh; width: 100%;"></div>
-
     </div>
     
     <script src="/script.js"></script>
