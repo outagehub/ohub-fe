@@ -9,6 +9,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <body>
+       <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8FX82J8YGR"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-8FX82J8YGR');
+    </script>
+    
+
     <style>
         body {
             margin: 0;
@@ -28,79 +39,79 @@
         }
 
         /* Blob Section */
-.blob-section {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    z-index: 1001;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 20px;
-    background-color: white;
-    border-radius: 8px;
-    color: #333;
-    width: 320px; /* Make the container wider */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+        .blob-section {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            color: #333;
+            width: 320px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-.blob-section h1,
-.blob-section p,
-.blob-section .search-bar-container {
-    max-width: 320px; /* Limit the width of inner content */
-}
+        .blob-section .header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
 
-.blob-section img {
-    height: 50px;
-    margin-bottom: 8px;
-}
+        .blob-section img {
+            height: 40px; /* Adjusted size */
+        }
 
-.blob-section h1 {
-    font-size: 20px;
-    font-weight: bold;
-    margin: 0 0 8px 0;
-}
+        .blob-section h1 {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0;
+        }
 
-.blob-section p {
-    font-size: 14px;
-    font-style: italic;
-    margin: 0 0 12px 0;
-}
+        .blob-section p {
+            font-size: 14px;
+            font-style: italic;
+            margin: 0 0 12px 0;
+        }
 
-.blob-section .search-bar-container {
-    width: 100%;
-}
+        .blob-section .search-bar-container {
+            width: 100%;
+        }
 
-.blob-section .search-bar-container input {
-    width: 100%;
-    max-width: 300px; /* Keep input width fixed */
-    padding: 8px 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.2s ease;
-}
+        .blob-section .search-bar-container input {
+            width: 100%;
+            max-width: 300px;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
 
-.blob-section .search-bar-container button {
-    width: 100%;
-    max-width: 320px; /* Keep button width fixed */
-    padding: 10px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-    margin-top: 10px;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-}
+        .blob-section .search-bar-container button {
+            width: 100%;
+            max-width: 320px;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
 
 .weather-alert-button {
     position: absolute;
     top: 50%;
-    right: 20px; /* Keep the button on the right */
+    right: 20px;
     transform: translateY(-50%);
     z-index: 1001;
     width: 60px;
@@ -117,39 +128,45 @@
 }
 
 .weather-alert-button:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow change on hover */
-    background-color: rgba(0, 123, 255, 0.1); /* Slight background color change */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 123, 255, 0.1);
 }
 
-/* Tooltip text displayed on hover */
 .weather-alert-button:hover::after {
     content: "Weather Alerts"; /* Tooltip text */
     position: absolute;
-    top: 110%; /* Position the tooltip below the button */
-    right: 0; /* Align the tooltip to the right edge of the button */
-    transform: translateX(0); /* No horizontal shift needed */
+    top: 110%; /* Position below the button */
+    left: 50%;
+    transform: translateX(-50%);
     background-color: rgba(0, 0, 0, 0.8); /* Dark background for the tooltip */
     color: white;
     font-size: 12px;
     padding: 5px 10px;
     border-radius: 4px;
     white-space: nowrap;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Tooltip shadow for better visibility */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow */
     z-index: 1000;
-    opacity: 1; /* Fully visible */
-    pointer-events: none; /* Prevent tooltip from interfering with hover */
-    text-align: center;
+    opacity: 1;
+    pointer-events: none;
 }
 
-/* Active and Disabled States */
-.weather-alert-button.active {
-    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.5);
-    background-color: rgba(0, 123, 255, 0.2);
-}
-
-.weather-alert-button.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+.weather-alert-button::after {
+    content: "";
+    position: absolute;
+    top: 110%; /* Position below the button */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: transparent; /* Initially invisible */
+    color: transparent;
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    box-shadow: none;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
 }
 
         /* Links Section */
@@ -202,20 +219,24 @@
     </style>
 </head>
 <body>
-    <!-- Map -->
+    
+	<!-- Map -->
     <div id="map"></div>
 
     <!-- Blob Section -->
     <div class="blob-section">
-        <img src="favicon.ico" alt="Logo">
-        <h1>Canadian Power Outages</h1>
+        <div class="header">
+            <img src="favicon.ico" alt="Logo">
+            <h1>Canadian Power Outages</h1>
+        </div>
         <p>Discover real-time power outages in Canada</p>
         <div class="search-bar-container">
             <input type="text" id="searchInput" placeholder="Enter address or location">
             <button id="searchButton">Search</button>
         </div>
     </div>
-    
+
+    <!-- Weather Alert Button -->
     <button class="weather-alert-button" id="weatherAlertButton"></button>
 
     <!-- Links Section -->
