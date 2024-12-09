@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration - Canadian Power Outages</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        body {
+            display: flex;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+            position: fixed;
+            height: 100%;
+        }
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .sidebar-header img.logo {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+        .sidebar-header h1 {
+            font-size: 18px;
+            margin: 0;
+        }
+        .sidebar-nav h2 {
+            font-size: 16px;
+            margin-top: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .sidebar-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+        .sidebar-nav ul li {
+            margin: 5px 0;
+        }
+        .sidebar-nav ul li a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        .sidebar-nav ul li a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+            flex-grow: 1;
+        }
+        .page-header {
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        .page-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <header class="sidebar-header">
+            <img src="favicon.ico" alt="Logo" class="logo">
+            <h1>Docs</h1>
+        </header>
+        <nav class="sidebar-nav">
+            <h2>Start</h2>
+            <ul>
+                <li><a href="apiaccess.html">API Access</a></li>
+                <li><a href="savingplans.html">Saving Plans</a></li>
+            </ul>
+            <h2>Develop Guide</h2>
+            <ul>
+                <li><a href="configuration.html">Configuration</a></li>
+                <li><a href="authentication.html">Authentication</a></li>
+                <li><a href="account.html">Account</a></li>
+            </ul>
+            <h2>Resources</h2>
+            <ul>
+                <li><a href="#">Glossary</a></li>
+                <li><a href="#">Error Code</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <header class="page-header">
+            <h1>Configuration</h1>
+        </header>
+        <section>
+            <p>To configure the Canadian Power Outages API, follow the steps below:</p>
+            <ul>
+                <li>Step 1: Obtain your API key by emailing <a href="mailto:andrew@canadianpoweroutages.ca">andrew@canadianpoweroutages.ca</a>.</li>
+                <li>Step 2: Use the API key to authenticate your requests.</li>
+                <li>Step 3: Pass configuration parameters as query parameters in the request URL.</li>
+            </ul>
+        </section>
+    </main>
+</body>
+</html>
+

@@ -319,13 +319,20 @@ async function getOutages(timestamp) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-    // Initialize the map
-    const map = initializeMap();
+console.log("JavaScript file loaded");
 
-    // Track whether weather alerts are currently displayed
-    let weatherAlertsVisible = false;
-    let weatherAlertLayers = []; // Store the layers for weather alerts
+document.addEventListener("DOMContentLoaded", async () => {
+    console.log("DOMContentLoaded triggered");
+
+    // Map initialization
+    let map;
+    try {
+        map = initializeMap();
+        console.log("Map initialized:", map);
+    } catch (error) {
+        console.error("Error initializing map:", error);
+        return; // Stop execution if map fails to initialize
+    }
 
     // Fetch and display outages immediately on page load
     (async () => {
@@ -337,10 +344,106 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     })();
 
+    // Search bar functionality
+    const searchButton = document.getElementById("searchButton");
+    if (!searchButton) {
+        console.error("Search Button not found in DOM.");
+        return;
+    }
+    console.log("Search Button found:", searchButton);
+
+    searchButton.addEventListener("click", async () => {
+        console.log("Search button clicked");
+        const address = document.getElementById("searchInput").value.trim();
+        console.log("Entered address:", address);
+
+        if (!address) {
+            alert("Please enter an address.");
+            return;
+        }
+
+        try {
+            const location = await geocodeAddressNominatim(address);
+            console.log("Geocoded location:", location);
+
+            if (location) {
+                // Center the map on the found location
+                map.setView([location.lat, location.lng], 14);
+                console.log("Map centered on:", location);
+
+                // Add a marker at the searched location
+                /*
+		    L.marker([location.lat, location.lng], {
+                    icon: new L.Icon({
+                        iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                    }),
+                })
+                    .addTo(map)
+                    .bindPopup(`<strong>Address:</strong> ${address}`)
+                    .openPopup();
+                */
+		console.log("Marker added to map");
+            } else {
+                alert("Address not found. Please try a different query.");
+                console.warn("Address not found for:", address);
+            }
+        } catch (error) {
+            console.error("Error in search functionality:", error);
+            alert("An error occurred while searching. Please try again.");
+        }
+    });
+
+    // Apply button functionality
+    /*
+	const applyButton = document.getElementById("applyButton");
+    if (!applyButton) {
+        console.error("Apply Button not found in DOM.");
+    } else {
+        console.log("Apply Button found:", applyButton);
+
+        applyButton.addEventListener("click", async () => {
+            console.log("Apply button clicked");
+            const selectedDate = document.getElementById("datePicker").value;
+            const selectedTime = document.getElementById("timePicker").value;
+            console.log("Selected Date:", selectedDate, "Selected Time:", selectedTime);
+
+            if (!selectedDate || !selectedTime) {
+                alert("Please select both date and time.");
+                return;
+            }
+
+            applyButton.disabled = true;
+            applyButton.textContent = "Loading...";
+            console.log("Apply button disabled");
+
+            try {
+                const timestamp = new Date(`${selectedDate}T${selectedTime}`).toISOString();
+                console.log("Formatted timestamp:", timestamp);
+
+                const filteredOutages = await getOutages(timestamp);
+                console.log("Filtered outages:", filteredOutages);
+
+                clearMap(map); // Clear existing markers/polygons
+                displayOutages(filteredOutages, map); // Display new data
+                console.log("Filtered outages displayed on map");
+            } catch (error) {
+                console.error("Error fetching or displaying outages:", error);
+                alert("An error occurred while fetching outages. Please try again.");
+            } finally {
+                applyButton.disabled = false;
+                applyButton.textContent = "Apply";
+                console.log("Apply button re-enabled");
+            }
+        });
+    }
+    */
     // Button and Loading Elements
     const weatherAlertButton = document.getElementById("weatherAlertButton");
-    const loadingMessage = document.getElementById("loadingMessage");
-
+    let weatherAlertsVisible = false;
+    let weatherAlertLayers = []; // Store the layers for weather alerts
     // Handle weather alerts button click
     weatherAlertButton.addEventListener("click", async () => {
         // If weather alerts are visible, remove them and toggle state
@@ -348,31 +451,23 @@ document.addEventListener("DOMContentLoaded", async () => {
             weatherAlertLayers.forEach(layer => map.removeLayer(layer)); // Remove layers from map
             weatherAlertLayers = []; // Clear layers array
             weatherAlertsVisible = false; // Set visibility to false
-            weatherAlertButton.textContent = "Show Weather Alerts"; // Update button text
             return; // Exit early
         }
 
         // Show loading message
-        loadingMessage.style.display = "block";
-        weatherAlertButton.disabled = true;
-        weatherAlertButton.style.backgroundColor = "#999";
 
         try {
             // Simulate lag effect before displaying weather alerts
-            await new Promise(resolve => setTimeout(resolve, 500)); // Add a 500ms delay
 
             // Fetch and display weather alerts
             const layers = await displayWeatherAlerts(map);
             weatherAlertLayers = layers; // Store displayed layers
             weatherAlertsVisible = true; // Set visibility to true
-            weatherAlertButton.textContent = "Hide Weather Alerts"; // Update button text
         } catch (error) {
             console.error("Error loading weather alerts:", error);
         } finally {
             // Hide loading message and re-enable button
-            loadingMessage.style.display = "none";
             weatherAlertButton.disabled = false;
-            weatherAlertButton.style.backgroundColor = "#007BFF";
         }
     });
 
@@ -393,72 +488,5 @@ document.addEventListener("DOMContentLoaded", async () => {
             return [];
         }
     }
-
-    // Apply filter for date and time
-document.getElementById("applyButton").addEventListener("click", async () => {
-    const applyButton = document.getElementById("applyButton");
-    const selectedDate = document.getElementById("datePicker").value;
-    const selectedTime = document.getElementById("timePicker").value;
-
-    if (!selectedDate || !selectedTime) {
-        alert("Please select both date and time.");
-        return;
-    }
-
-    // Disable the button to prevent multiple clicks
-    applyButton.disabled = true;
-    applyButton.textContent = "Loading...";
-
-    try {
-        const timestamp = new Date(`${selectedDate}T${selectedTime}`).toISOString();
-        const filteredOutages = await getOutages(timestamp);
-
-        clearMap(map); // Clear existing markers/polygons
-        displayOutages(filteredOutages, map); // Display new data
-    } catch (error) {
-        console.error("Error fetching or displaying outages:", error);
-        alert("An error occurred while fetching outages. Please try again.");
-    } finally {
-        // Re-enable the button after processing
-        applyButton.disabled = false;
-        applyButton.textContent = "Apply";
-    }
-});
-
-    // Handle search bar functionality
-    document.getElementById("searchButton").addEventListener("click", async () => {
-        const address = document.getElementById("searchInput").value.trim();
-
-        if (!address) {
-            alert("Please enter an address.");
-            return;
-        }
-
-        try {
-            const location = await geocodeAddressNominatim(address);
-            if (location) {
-                // Center the map on the found location
-                map.setView([location.lat, location.lng], 14);
-
-                // Add a marker at the searched location
-                L.marker([location.lat, location.lng], {
-                    icon: new L.Icon({
-                        iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
-                        iconSize: [25, 41],
-                        iconAnchor: [12, 41],
-                        popupAnchor: [1, -34],
-                    }),
-                })
-                    .addTo(map)
-                    .bindPopup(`<strong>Address:</strong> ${address}`)
-                    .openPopup();
-            } else {
-                alert("Address not found. Please try a different query.");
-            }
-        } catch (error) {
-            console.error("Error in search functionality:", error);
-            alert("An error occurred while searching. Please try again.");
-        }
-    });
 });
 

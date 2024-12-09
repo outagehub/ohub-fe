@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Access - Canadian Power Outages</title>
+    <title>Quebec API - Canadian Power Outages</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <style>
         /* General Styles */
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
-            background-color: #f9f9f9; /* Light gray for overall background */
+            background-color: #f9f9f9;
             color: #333;
         }
 
         a {
-            color: black; /* Black links for theme continuity */
+            color: black;
             text-decoration: none;
         }
 
@@ -79,7 +79,7 @@
         /* Layout Styles */
         .container {
             display: flex;
-            margin-top: 60px; /* Reduced spacing under the header */
+            margin-top: 60px;
         }
 
         /* Sidebar Styles */
@@ -127,7 +127,7 @@
         /* Content Area Styles */
         .content-wrapper {
             flex: 1;
-            padding: 0 20px; /* Adjusted left and right padding for better balance */
+            padding: 0 20px;
             box-sizing: border-box;
         }
 
@@ -135,10 +135,10 @@
             max-width: 800px;
             margin: 0 auto;
             background-color: white;
-            padding: 20px 30px; /* Reduced vertical padding */
+            padding: 20px 30px;
             border: 1px solid #ddd;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for floating look */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .content h1 {
@@ -170,6 +170,21 @@
 
         .content ul li {
             margin-bottom: 10px;
+        }
+
+        pre {
+            background-color: #f4f4f4;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            overflow-x: auto;
+            font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+        }
+
+        .highlight {
+            color: #007bff;
+            font-weight: bold;
         }
 
         /* On This Page Styles */
@@ -219,8 +234,8 @@
         </div>
         <nav class="nav-links">
             <a href="/">Home</a>
-            <a href="apiaccess.html" class="active">API Access</a>
-            <a href="/feedback">Feedback Form</a>
+            <a href="apiaccess.html">API Access</a>
+            <a href="quebecapi.html" class="active">Quebec API</a>
             <a href="https://buymeacoffee.com/andrewgordienko" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a>
         </nav>
     </header>
@@ -246,23 +261,33 @@
         <!-- Main Content -->
         <div class="content-wrapper">
             <div class="content">
-                <h1>API Access</h1>
-                <p>At <strong>Canadian Power Outages</strong>, we understand two major challenges surrounding Quebec power outages:</p>
+                <h1>Quebec API</h1>
+                <p>
+                    The <span class="highlight">Quebec API</span> provides real-time updates on power outages across Quebec:
+                </p>
                 <ul>
-                    <li>Finding an API that stays up to date with the latest information about outages.</li>
-                    <li>Being able to pass in latitude, longitude, and a distance to check if an outage exists in a specific area.</li>
+                    <li>Data updated every 5 minutes.</li>
+                    <li>Search for outages by latitude, longitude, and distance.</li>
                 </ul>
-                <h2 id="overview">Overview</h2>
-                <p>We’ve built an API that solves both problems:</p>
-                <ul>
-                    <li>Our data updates <strong>every 5 minutes</strong>, ensuring you have the latest outage information.</li>
-                    <li>You can pass a latitude, longitude, and distance to quickly determine if there’s an outage in the area.</li>
-                </ul>
-                <h2 id="endpoints">API Endpoints</h2>
-                <ul>
-                    <li><code>/hydro-outages</code>: Get the latest information about outages.</li>
-                    <li><code>/outages-nearby</code>: Check if there’s an outage near a specific location.</li>
-                </ul>
+
+                <h2>Code Example</h2>
+                <pre>
+<span class="comment"># Import necessary libraries</span>
+import requests
+
+<span class="comment"># API configuration</span>
+API_KEY = "your-api-key"
+URL = "http://example.com/api"
+
+<span class="comment"># Example request</span>
+response = requests.get(URL, headers={"X-API-KEY": API_KEY})
+print(response.json())
+                </pre>
+
+                <h2>Get Access</h2>
+                <p>
+                    To request access, email us at <a href="mailto:andrew@canadianpoweroutages.ca" class="highlight">andrew@canadianpoweroutages.ca</a>.
+                </p>
             </div>
         </div>
 
@@ -271,7 +296,8 @@
             <h2>On This Page</h2>
             <ul>
                 <li><a href="#overview">Overview</a></li>
-                <li><a href="#endpoints">API Endpoints</a></li>
+                <li><a href="#code-example">Code Example</a></li>
+                <li><a href="#get-access">Get Access</a></li>
             </ul>
         </aside>
     </div>

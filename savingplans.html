@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saving Plans - Canadian Power Outages</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        body {
+            display: flex;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+            position: fixed;
+            height: 100%;
+        }
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .sidebar-header img.logo {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+        .sidebar-header h1 {
+            font-size: 18px;
+            margin: 0;
+        }
+        .sidebar-nav h2 {
+            font-size: 16px;
+            margin-top: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .sidebar-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+        .sidebar-nav ul li {
+            margin: 5px 0;
+        }
+        .sidebar-nav ul li a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        .sidebar-nav ul li a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+            flex-grow: 1;
+        }
+        .page-header {
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        .page-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        pre {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <header class="sidebar-header">
+            <img src="favicon.ico" alt="Logo" class="logo">
+            <h1>Docs</h1>
+        </header>
+        <nav class="sidebar-nav">
+            <h2>Start</h2>
+            <ul>
+                <li><a href="apiaccess.html">API Access</a></li>
+                <li><a href="savingplans.html">Saving Plans</a></li>
+            </ul>
+            <h2>Develop Guide</h2>
+            <ul>
+                <li><a href="configuration.html">Configuration</a></li>
+                <li><a href="authentication.html">Authentication</a></li>
+                <li><a href="account.html">Account</a></li>
+            </ul>
+            <h2>Resources</h2>
+            <ul>
+                <li><a href="#">Glossary</a></li>
+                <li><a href="#">Error Code</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <header class="page-header">
+            <h1>Saving Plans</h1>
+        </header>
+        <section>
+            <p>Savings Plans is a discount plan that offers lower pay-as-you-go pricing. In exchange, you need to prepay the committed usage amount.</p>
+            <p>For example, if you commit to spending ¥1,000 per year and prepay upfront for 3 years, your standard subscription price will be calculated at a 40% discount. The price for real-time weather is reduced from ¥0.001 per request to ¥0.0004 per request. This means you get approximately 2.5 million requests with a 3-year saving plan.</p>
+
+            <h2>Commitment Amount</h2>
+            <p>The commitment amount is the amount you commit to using within one year. This amount expires after 1 year or when fully used.</p>
+
+            <h2>Commitment Terms</h2>
+            <ul>
+                <li>1-year: Total upfront cost = Commitment Amount x 1 year</li>
+                <li>3-year: Total upfront cost = Commitment Amount x 3 years</li>
+            </ul>
+
+            <h2>Saving Rate</h2>
+            <p>Saving Rate is the discount multiplier applied for pay-as-you-go pricing.</p>
+        </section>
+    </main>
+</body>
+</html>
+
