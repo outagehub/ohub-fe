@@ -50,13 +50,23 @@ function formatTimestampWithUserTimeZone(timestamp) {
 
 function initializeMap() {
     const map = L.map("map", {
-        zoomControl: true,
+        zoomControl: false, // Disable default zoom control position
     }).setView([62, -96.8], 4);
 
+    // Add the tile layer
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
         attribution: "© OpenStreetMap contributors",
     }).addTo(map);
+
+    // Add zoom control on the top-right
+    L.control.zoom({
+        position: "topright", // Position the zoom controls in the top-right
+    }).addTo(map);
+
+    // Adjust zoom control placement (CSS for margin)
+    const zoomControl = document.querySelector(".leaflet-control-zoom");
+    zoomControl.style.marginTop = "80px"; // Add spacing to move below the Donate button
 
     return map;
 }

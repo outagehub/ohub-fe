@@ -17,189 +17,85 @@
             overflow: hidden;
         }
 
-        /* Header Styles */
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: white;
-            border-bottom: 1px solid #ddd;
-            padding: 10px 20px;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-
-        .header .logo {
-            display: flex;
-            align-items: center;
-        }
-
-        .header .logo img {
-            height: 28px;
-            margin-right: 10px;
-        }
-
-        .header .logo span {
-            font-size: 20px;
-            font-weight: bold;
-            color: #292b2c;
-        }
-
-.header .nav-links {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-    margin-right: 20px; /* Adjust this value to move the links to the left */
-}
-
-        .header .nav-links a {
-            font-size: 14px;
-            font-weight: 500;
-            text-decoration: none;
-            color: #333;
-            padding: 5px 10px;
-            border-radius: 4px;
-            transition: background-color 0.2s ease, color 0.2s ease;
-            white-space: nowrap;
-        }
-
-        .header .nav-links a.active {
-            font-weight: bold;
-            color: #000;
-        }
-
-        .header .nav-links a:hover {
-            background-color: #f2f2f2;
-        }
-
         /* Map Styles */
         #map {
             position: absolute;
-            top: 50px;
+            top: 0;
             left: 0;
             width: 100%;
-            height: calc(100vh - 50px);
+            height: 100vh;
+            z-index: 0;
         }
 
-        /* Search Bar Styles */
-        .search-bar-container {
-            position: absolute;
-            top: 70px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1001;
-            background-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            padding: 10px 20px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        /* Blob Section */
+.blob-section {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    color: #333;
+    width: 320px; /* Make the container wider */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-        .search-bar-container input {
-            width: 300px;
-            padding: 8px 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-            outline: none;
-        }
+.blob-section h1,
+.blob-section p,
+.blob-section .search-bar-container {
+    max-width: 320px; /* Limit the width of inner content */
+}
 
-        .search-bar-container button {
-            padding: 8px 15px;
-            background-color: #007BFF;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            transition: background-color 0.2s ease;
-        }
+.blob-section img {
+    height: 50px;
+    margin-bottom: 8px;
+}
 
-        .search-bar-container button:hover {
-            background-color: #0056b3;
-        }
+.blob-section h1 {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0 0 8px 0;
+}
 
-        /* Weather Alert Button Styles */
-        .weather-alert-button {
-            position: absolute;
-            top: 50%;
-            right: 20px;
-            transform: translateY(-50%);
-            z-index: 1001;
-            width: 60px;
-            height: 60px;
-            background-color: transparent;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            background-image: url('weather.png');
-            background-size: cover;
-            background-position: center;
-        }
+.blob-section p {
+    font-size: 14px;
+    font-style: italic;
+    margin: 0 0 12px 0;
+}
 
-        .weather-alert-button:hover {
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
+.blob-section .search-bar-container {
+    width: 100%;
+}
 
-        /* Bottom Controls Styles */
-        .bottom-controls {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1001;
-            background-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            padding: 15px 20px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+.blob-section .search-bar-container input {
+    width: 100%;
+    max-width: 300px; /* Keep input width fixed */
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
 
-        .bottom-controls input {
-            padding: 8px 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        .bottom-controls button {
-            padding: 8px 15px;
-            background-color: #28A745;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .bottom-controls button:hover {
-            background-color: #218838;
-        }
-
-        @media (max-width: 768px) {
-            .header .nav-links {
-                justify-content: center;
-                gap: 10px;
-            }
-
-            .search-bar-container input {
-                width: 200px;
-            }
-
-            .bottom-controls {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-        }
+.blob-section .search-bar-container button {
+    width: 100%;
+    max-width: 320px; /* Keep button width fixed */
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
 
 .weather-alert-button {
     position: absolute;
@@ -256,47 +152,84 @@
     cursor: not-allowed;
 }
 
+        /* Links Section */
+        .links-section {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            background-color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 15px;
+        }
+
+        .links-section a {
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .links-section a.active {
+            font-weight: bold;
+            color: #000;
+        }
+
+        .links-section a:hover {
+            background-color: #f2f2f2;
+        }
+
+        @media (max-width: 768px) {
+            .blob-section {
+                max-width: 90%;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .links-section {
+                right: 10px;
+                padding: 5px 10px;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">
-            <img src="favicon.ico" alt="Logo">
-            <span>Canadian Power Outages</span>
-        </div>
-        <nav class="nav-links">
-            <a href="/" class="active">Home</a>
-            <a href="/apiaccess.html">API Access</a>
-            <a href="/feedback.html">Feedback</a>
-            <a href="https://buymeacoffee.com/andrewgordienko" target="_blank" rel="noopener noreferrer">Donate</a>
-        </nav>
-    </header>
-
-    <!-- Search Bar -->
-    <div class="search-bar-container">
-        <input type="text" id="searchInput" placeholder="Enter address or location">
-        <button id="searchButton">Search</button>
-    </div>
-
     <!-- Map -->
     <div id="map"></div>
 
-    <!-- Weather Alert Button -->
-    <button class="weather-alert-button" id="weatherAlertButton"></button>
-    <!--
-    <div class="bottom-controls">
-        <input type="date" id="datePicker">
-        <input type="time" id="timePicker">
-        <button id="applyButton">Apply</button>
+    <!-- Blob Section -->
+    <div class="blob-section">
+        <img src="favicon.ico" alt="Logo">
+        <h1>Canadian Power Outages</h1>
+        <p>Discover real-time power outages in Canada</p>
+        <div class="search-bar-container">
+            <input type="text" id="searchInput" placeholder="Enter address or location">
+            <button id="searchButton">Search</button>
+        </div>
     </div>
-    -->
+    
+    <button class="weather-alert-button" id="weatherAlertButton"></button>
+
+    <!-- Links Section -->
+    <div class="links-section">
+        <a href="/" class="active">Home</a>
+        <a href="/apiaccess.html">API Access</a>
+        <a href="/feedback.html">Feedback</a>
+        <a href="https://buymeacoffee.com/andrewgordienko" target="_blank" rel="noopener noreferrer">Donate</a>
+    </div>
 
     <!-- Scripts -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-    <script src="./script.js?v=4.6"></script>
-
+    <script src="./script.js?v=4.7"></script>
 </body>
 </html>
 
