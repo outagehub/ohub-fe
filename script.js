@@ -13,7 +13,7 @@ function formatTimestamp(dateInput, powerCompany) {
         date = new Date(timestamp);
     } else if (
         ["Quebec Hydro", "Manitoba Hydro", "Algoma Power", "EPCOR Ontario", 
-        "Equs Alberta", "FortisBC", "Hydro Ottawa", "ENMAX Calgary", "Hydro One"].includes(powerCompany)
+        "Equs Alberta", "FortisBC", "Hydro Ottawa", "ENMAX Calgary", "Hydro One", "Elexicon Energy", "Toronto Hydro"].includes(powerCompany)
     ) {
         date = new Date(dateInput);
     } else {
@@ -68,18 +68,25 @@ function initializeMap() {
     const zoomControl = document.querySelector(".leaflet-control-zoom");
     zoomControl.style.marginTop = "80px"; // Add spacing to move below the Donate button
 
+    const currentRightMargin = parseInt(window.getComputedStyle(zoomControl).marginRight) || 0;
+    zoomControl.style.marginRight = `${currentRightMargin * 2}px`; // Double the current right margin
+
     return map;
 }
 
 function clearMap(map) {
+    // Remove all layers except the base tile layer
     map.eachLayer((layer) => {
-        if (layer instanceof L.Marker || layer instanceof L.Polygon) {
+        if (!(layer instanceof L.TileLayer)) {
             map.removeLayer(layer);
         }
     });
 }
 
 function displayOutages(outages, map) {
+    // Clear all existing layers
+    clearMap(map);
+
     const bluePinIcon = new L.Icon({
         iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
         iconSize: [25, 41],
@@ -90,23 +97,34 @@ function displayOutages(outages, map) {
         shadowAnchor: [12, 41],
     });
 
-    // Create a MarkerClusterGroup
+    // Create a MarkerClusterGroup for efficient marker management
     const markers = L.markerClusterGroup();
 
-    // Loop through outages and add markers to the cluster group
+    // Loop through all outages and add markers and polygons to the map
     outages.forEach((outage) => {
-	if (outage.power_company === "Hydro One") {
-    		console.log(`Power Company: ${outage.power_company}`);
-    		console.log(`Outage: ${JSON.stringify(outage)}`);
-		
-		const temp = outage.latitude;
-    		outage.latitude = outage.longitude;
-    		outage.longitude = temp;
-	}
+        // Debug: Check if Hydro One data is present
+        if (outage.power_company === "Hydro One") {
+            console.log("Hydro One Outage Data:", outage);
+        }
 
-	const formattedDateOff = formatTimestamp(outage.date_off, outage.power_company);
-        const formattedCrewEta = formatTimestamp(outage.crew_eta, outage.power_company);
-        const formattedTimestampAdded = formatTimestampWithUserTimeZone(outage.time_stamp);
+        // Handle coordinate swapping for Hydro One
+        if (outage.power_company === "Hydro One") {
+            const temp = outage.latitude;
+            outage.latitude = outage.longitude;
+            outage.longitude = temp;
+            console.log(`Hydro One Coordinates After Swap: Lat=${outage.latitude}, Lng=${outage.longitude}`);
+        }
+
+        // Ensure valid coordinates
+        if (
+            !outage.latitude ||
+            !outage.longitude ||
+            typeof outage.latitude !== "number" ||
+            typeof outage.longitude !== "number"
+        ) {
+            console.warn(`Invalid coordinates for outage ID ${outage.id}`);
+            return;
+        }
 
         const popupContent = `
             <div style="font-size: 14px; line-height: 1.5;">
@@ -116,9 +134,9 @@ function displayOutages(outages, map) {
                 <strong>Cause:</strong> ${outage.cause || "Unknown"}<br>
                 <strong>Customers Affected:</strong> ${outage.num_customers || "N/A"}<br>
                 <strong>Crew Status:</strong> ${outage.crew_status || "N/A"}<br>
-                <strong>Outage Start:</strong> ${formattedDateOff}<br>
-                <strong>Estimated Restore:</strong> ${formattedCrewEta}<br>
-                <strong>Timestamp Added:</strong> ${formattedTimestampAdded}<br>
+                <strong>Outage Start:</strong> ${formatTimestamp(outage.date_off, outage.power_company)}<br>
+                <strong>Estimated Restore:</strong> ${formatTimestamp(outage.crew_eta, outage.power_company)}<br>
+                <strong>Timestamp Added:</strong> ${formatTimestampWithUserTimeZone(outage.time_stamp)}<br>
                 <em>Power Company: ${outage.power_company || "Unknown Company"}</em>
             </div>
         `;
@@ -128,37 +146,141 @@ function displayOutages(outages, map) {
 
         markers.addLayer(marker);
 
-        // Handle polygons if needed
-        if (outage.power_company !== "Hydro One" && Array.isArray(outage.polygon) && outage.polygon.length > 0) {
+        // Add polygons if they exist
+        if (
+            outage.power_company !== "Hydro One" &&
+            Array.isArray(outage.polygon) &&
+            outage.polygon.length > 0
+        ) {
+            const polygonCoords = formatPolygonCoords(outage.polygon);
 
-	    const polygonCoords = formatPolygonCoords(outage.polygon);
-
-            const validCoords = polygonCoords.filter(
-                (coord) =>
-                    Array.isArray(coord) &&
-                    coord.length === 2 &&
-                    typeof coord[0] === "number" &&
-                    typeof coord[1] === "number"
-            );
-
-            if (validCoords.length > 2) {
-                const polygon = L.polygon(validCoords, {
+            if (polygonCoords.length > 2) {
+                const polygon = L.polygon(polygonCoords, {
                     color: "red",
                     weight: 2,
                     fillOpacity: 0.3,
                 }).bindPopup(popupContent);
 
                 polygon.addTo(map);
-            } else {
-                if (outage.power_company === "Quebec Hydro") {
-                    console.warn("Quebec Hydro: Invalid or incomplete polygon data for outage ID:", outage.id);
-                }
             }
         }
     });
 
-    // Add markers to the map
+    // Add the MarkerClusterGroup to the map
     map.addLayer(markers);
+
+    console.log(`Displayed ${outages.length} outages on the map.`);
+}
+
+function formatPolygonCoords(flatCoords) {
+    if (
+        Array.isArray(flatCoords) &&
+        Array.isArray(flatCoords[0]) &&
+        flatCoords[0].length === 2 &&
+        typeof flatCoords[0][0] === "number" &&
+        typeof flatCoords[0][1] === "number"
+    ) {
+        return flatCoords; // Return as-is if already in the correct format
+    }
+
+    const formattedCoords = [];
+    for (let i = 0; i < flatCoords.length; i += 2) {
+        if (flatCoords[i + 1] !== undefined && flatCoords[i] !== undefined) {
+            formattedCoords.push([flatCoords[i + 1], flatCoords[i]]); // Swap latitude and longitude
+        } else {
+            console.warn("Invalid coordinate pair found:", flatCoords[i], flatCoords[i + 1]);
+        }
+    }
+    return formattedCoords;
+}
+
+function displayOutages(outages, map) {
+    // Clear all existing layers
+    clearMap(map);
+
+    const bluePinIcon = new L.Icon({
+        iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
+        shadowSize: [41, 41],
+        shadowAnchor: [12, 41],
+    });
+
+    // Create a MarkerClusterGroup for efficient marker management
+    const markers = L.markerClusterGroup();
+
+    // Loop through all outages and add markers and polygons to the map
+    outages.forEach((outage) => {
+        // Debug: Check if Hydro One data is present
+        if (outage.power_company === "Hydro One") {
+            console.log("Hydro One Outage Data:", outage);
+        }
+
+        // Handle coordinate swapping for Hydro One
+        if (outage.power_company === "Hydro One") {
+            const temp = outage.latitude;
+            outage.latitude = outage.longitude;
+            outage.longitude = temp;
+            console.log(`Hydro One Coordinates After Swap: Lat=${outage.latitude}, Lng=${outage.longitude}`);
+        }
+
+        // Ensure valid coordinates
+        if (
+            !outage.latitude ||
+            !outage.longitude ||
+            typeof outage.latitude !== "number" ||
+            typeof outage.longitude !== "number"
+        ) {
+            console.warn(`Invalid coordinates for outage ID ${outage.id}`);
+            return;
+        }
+
+        const popupContent = `
+            <div style="font-size: 14px; line-height: 1.5;">
+                <strong>Outage ID:</strong> ${outage.id}<br>
+                <strong>Municipality:</strong> ${outage.municipality || "N/A"}<br>
+                <strong>Area:</strong> ${outage.area || "N/A"}<br>
+                <strong>Cause:</strong> ${outage.cause || "Unknown"}<br>
+                <strong>Customers Affected:</strong> ${outage.num_customers || "N/A"}<br>
+                <strong>Crew Status:</strong> ${outage.crew_status || "N/A"}<br>
+                <strong>Outage Start:</strong> ${formatTimestamp(outage.date_off, outage.power_company)}<br>
+                <strong>Estimated Restore:</strong> ${formatTimestamp(outage.crew_eta, outage.power_company)}<br>
+                <strong>Timestamp Added:</strong> ${formatTimestampWithUserTimeZone(outage.time_stamp)}<br>
+                <em>Power Company: ${outage.power_company || "Unknown Company"}</em>
+            </div>
+        `;
+
+        const marker = L.marker([outage.latitude, outage.longitude], { icon: bluePinIcon })
+            .bindPopup(popupContent);
+
+        markers.addLayer(marker);
+
+        // Add polygons if they exist
+        if (
+            outage.power_company !== "Hydro One" &&
+            Array.isArray(outage.polygon) &&
+            outage.polygon.length > 0
+        ) {
+            const polygonCoords = formatPolygonCoords(outage.polygon);
+
+            if (polygonCoords.length > 2) {
+                const polygon = L.polygon(polygonCoords, {
+                    color: "red",
+                    weight: 2,
+                    fillOpacity: 0.3,
+                }).bindPopup(popupContent);
+
+                polygon.addTo(map);
+            }
+        }
+    });
+
+    // Add the MarkerClusterGroup to the map
+    map.addLayer(markers);
+
+    console.log(`Displayed ${outages.length} outages on the map.`);
 }
 
 function formatPolygonCoords(flatCoords) {
@@ -256,28 +378,6 @@ function displayWeatherAlerts(map) {
     return weatherAlertLayers;
 }
 
-function formatPolygonCoords(flatCoords) {
-    if (
-        Array.isArray(flatCoords) &&
-        Array.isArray(flatCoords[0]) &&
-        flatCoords[0].length === 2 &&
-        typeof flatCoords[0][0] === "number" &&
-        typeof flatCoords[0][1] === "number"
-    ) {
-        return flatCoords; // Return as-is if already in the correct format
-    }
-
-    const formattedCoords = [];
-    for (let i = 0; i < flatCoords.length; i += 2) {
-        if (flatCoords[i + 1] !== undefined && flatCoords[i] !== undefined) {
-            formattedCoords.push([flatCoords[i + 1], flatCoords[i]]); // Swap latitude and longitude
-        } else {
-            console.warn("Invalid coordinate pair found:", flatCoords[i], flatCoords[i + 1]);
-        }
-    }
-    return formattedCoords;
-}
-
 async function geocodeAddressNominatim(address) {
     const nominatimUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
 
@@ -354,57 +454,43 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     })();
 
-    // Search bar functionality
-    const searchButton = document.getElementById("searchButton");
-    if (!searchButton) {
-        console.error("Search Button not found in DOM.");
+const searchForm = document.getElementById("searchForm"); // Add form wrapper
+
+const handleSearch = async () => {
+    console.log("Search initiated");
+    const address = document.getElementById("searchInput").value.trim();
+    console.log("Entered address:", address);
+
+    if (!address) {
+        alert("Please enter an address.");
         return;
     }
-    console.log("Search Button found:", searchButton);
 
-    searchButton.addEventListener("click", async () => {
-        console.log("Search button clicked");
-        const address = document.getElementById("searchInput").value.trim();
-        console.log("Entered address:", address);
+    try {
+        const location = await geocodeAddressNominatim(address);
+        console.log("Geocoded location:", location);
 
-        if (!address) {
-            alert("Please enter an address.");
-            return;
+        if (location) {
+            // Center the map on the found location
+            map.setView([location.lat, location.lng], 14);
+            console.log("Map centered on:", location);
+
+            console.log("Marker added to map");
+        } else {
+            alert("Address not found. Please try a different query.");
+            console.warn("Address not found for:", address);
         }
+    } catch (error) {
+        console.error("Error in search functionality:", error);
+        alert("An error occurred while searching. Please try again.");
+    }
+};
 
-        try {
-            const location = await geocodeAddressNominatim(address);
-            console.log("Geocoded location:", location);
-
-            if (location) {
-                // Center the map on the found location
-                map.setView([location.lat, location.lng], 14);
-                console.log("Map centered on:", location);
-
-                // Add a marker at the searched location
-                /*
-		    L.marker([location.lat, location.lng], {
-                    icon: new L.Icon({
-                        iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
-                        iconSize: [25, 41],
-                        iconAnchor: [12, 41],
-                        popupAnchor: [1, -34],
-                    }),
-                })
-                    .addTo(map)
-                    .bindPopup(`<strong>Address:</strong> ${address}`)
-                    .openPopup();
-                */
-		console.log("Marker added to map");
-            } else {
-                alert("Address not found. Please try a different query.");
-                console.warn("Address not found for:", address);
-            }
-        } catch (error) {
-            console.error("Error in search functionality:", error);
-            alert("An error occurred while searching. Please try again.");
-        }
-    });
+// Add event listener for form submission (Enter key)
+searchForm.addEventListener("submit", (event) => {
+    event.preventDefault(); // Prevent form submission
+    handleSearch();
+});
 
     // Apply button functionality
     /*
@@ -450,7 +536,132 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
     */
-    // Button and Loading Elements
+console.log("JavaScript file loaded");
+  console.log("DOMContentLoaded triggered");
+
+// Get the button and spinner elements
+const pikadayButton = document.getElementById("pikadayButton");
+const spinner = document.getElementById("loadingSpinner");
+
+// Ensure the elements exist
+if (!pikadayButton || !spinner) {
+  console.error("Required elements are missing in the HTML.");
+  throw new Error("Initialization failed: Missing elements in the HTML.");
+}
+
+console.log("Elements found:", pikadayButton, spinner);
+
+// Calculate current time and time 24 hours ago
+const currentDateTime = new Date(); // Current date and time
+const oneDayAgo = new Date(currentDateTime.getTime() - 24 * 60 * 60 * 1000); // 24 hours ago
+let date = currentDateTime; // Initialize `date` with the current time
+
+console.log("Current Date:", currentDateTime);
+console.log("One Day Ago:", oneDayAgo);
+
+// Format date for display
+const formatForDisplay = (date) => {
+  console.log("Formatting date:", date);
+  return date.toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+};
+
+// Update the button text and data-timestamp attribute
+const updateButtonDisplay = (date) => {
+  pikadayButton.textContent = formatForDisplay(date); // Update displayed text
+  pikadayButton.setAttribute("data-timestamp", date.toISOString()); // Store ISO timestamp
+  console.log("Button updated with date:", date);
+};
+
+window.picker = new Pikaday({
+  field: pikadayButton, // Attach directly to the button
+  format: "MMM D, YYYY h:mm A", // Custom display format
+  minDate: oneDayAgo, // Minimum selectable date
+  maxDate: currentDateTime, // Maximum selectable date
+  showTime: true, // Enable time selection (requires Pikaday-Time plugin)
+  use24hour: false, // Use AM/PM time format
+  incrementHourBy: 1, // Increment hours by 1
+  incrementMinuteBy: 5, // Increment minutes by 5
+  defaultDate: currentDateTime, // Default to current time
+  setDefaultDate: true, // Preload default date
+    autoClose: false, // Close picker automatically after selection
+
+	onDraw: function () {
+    // Ensure the time picker is displayed properly
+    const timePickerElement = document.querySelector(".pika-timepicker");
+    if (timePickerElement) {
+      timePickerElement.style.display = "block";
+      timePickerElement.style.visibility = "visible";
+    }
+  },
+  onSelect: async function (selectedDate) {
+    console.log("Selected Date/Time:", selectedDate);
+
+    // Update the global `date` variable
+    date = selectedDate;
+
+    // Validate the selected time
+    if (date > currentDateTime || date < oneDayAgo) {
+      alert("Please select a time within the last 24 hours.");
+      return;
+    }
+
+    // Update the button display
+    updateButtonDisplay(date);
+picker.hide();
+    // Show spinner during fetch
+    spinner.style.display = "inline-block";
+
+    // Fetch and display outages
+    try {
+      const response = await fetch(
+        `/slide_outages?timestamp=${encodeURIComponent(date.toISOString())}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch outages: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      if (data.error) {
+        console.error(`API Error: ${data.error}`);
+        return;
+      }
+
+      const outages = data.outages || [];
+      console.log(`Fetched ${outages.length} outages for ${date}`);
+
+      // Clear and update the map
+      clearMap(map);
+      displayOutages(outages, map);
+    } catch (error) {
+      console.error(`Error fetching outages: ${error}`);
+    } finally {
+      // Hide spinner after fetch completes
+      spinner.style.display = "none";
+    }
+  },
+});
+
+// Ensure the picker works on button click
+pikadayButton.addEventListener("click", () => {
+  picker.show(); // Manually show the picker
+  console.log("Pikaday picker shown.");
+});
+
+// Set the initial display to the current date/time
+updateButtonDisplay(currentDateTime);
+
+console.log("Pikaday initialized and button updated");
+
+// Button and Loading Elements
     const weatherAlertButton = document.getElementById("weatherAlertButton");
     let weatherAlertsVisible = false;
     let weatherAlertLayers = []; // Store the layers for weather alerts

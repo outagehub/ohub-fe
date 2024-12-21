@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Access - Canadian Power Outages</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        /* Global styles */
+        body {
+            margin: 0;
+            font-family: "Arial", sans-serif;
+            background: linear-gradient(to bottom, #dceefd 10%, #ffffff 30%);
+	    color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh; /* Ensure gradient spans the entire viewport */
+        }
+
+        /* Header styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 50%;
+            max-width: 600px;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-section img {
+            width: 28px;
+            height: 28px;
+            margin-right: 8px;
+        }
+
+        .logo-section h1 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            margin-right: 10px;
+            font-size: 0.85rem;
+            padding: 5px 7px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        /* Banner Section */
+        .banner {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px 0;
+            background: linear-gradient(to bottom, #dceefd, #ffffff);
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            width: 70%;
+            max-width: 800px;
+        }
+
+        .banner h2 {
+            font-size: 2rem;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .banner p {
+            font-size: 1rem;
+            color: #333;
+            margin: 5px 0;
+        }
+
+        /* Subtitle styles */
+        .subtitle {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #000;
+        }
+
+	/* Catchphrase */
+        .catchphrase {
+            margin: 60px 0 30px;
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            color: #000;
+        }
+
+        /* Discount Row */
+        .discount-row {
+            width: 70%;
+            max-width: 750px;
+            margin-bottom: 30px;
+            padding: 15px 20px;
+            background: #f0f8ff;
+            border-radius: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            font-size: 1rem;
+            color: #007bff;
+        }
+
+	 /* Product Container */
+        .products-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            width: 55%;
+            gap: 10px;
+            margin-bottom: 50px;
+        }
+
+/* Product Container */
+.products-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 60%;
+    gap: 10px; /* Consistent gap between cards */
+    margin-bottom: 50px;
+}
+
+/* Product Card */
+.product-card {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: calc((100% - 20px) / 3); /* Ensures three cards fit with 10px gap */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: left; /* Align content to the left */
+    transition: box-shadow 0.3s;
+}
+
+.product-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.product-card h3 {
+    margin: 0 0 10px;
+    font-size: 1.3rem;
+    color: #007bff;
+    font-weight: normal;
+    text-align: center;
+}
+
+.product-card p {
+    margin: 0 0 15px;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.product-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 15px;
+}
+
+.product-card li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #555;
+}
+
+.product-card li::before {
+    content: "✔";
+    color: #28a745;
+    font-weight: bold;
+    margin-right: 10px;
+    margin-top: 2px;
+}
+
+.product-card button {
+    padding: 10px;
+    border: 1px solid #ccc;
+    background: #ffffff;
+    color: #333;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+}
+
+.product-card button:hover {
+    background: #30a745; /* Green background */
+    color: #ffffff; /* White text for contrast */
+}
+
+.products-container {
+    display: flex;
+    justify-content: space-between; /* Spaces evenly */
+    flex-wrap: nowrap; /* Prevent wrapping to a new line */
+    width: 90%; /* Adjust container width as needed */
+    margin: 0 auto; /* Center the container */
+    gap: 20px; /* Space between cards */
+}
+
+.product-card {
+    flex: 1; /* Equal width for all cards */
+    max-width: 30%; /* Ensure three cards fit in one line */
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: left;
+    transition: box-shadow 0.3s;
+}
+
+.product-card button:hover {
+    background: rgba(104, 187, 89, 0.85); /* Green (#68bb59) with 85% opacity */
+    color: #ffffff; /* White text for contrast */
+}
+
+	.product-card button {
+    background: #ffffff; /* Default white background */
+    color: #333; /* Default dark gray text */
+    border: 1px solid #ccc; /* Default border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 20px; /* Padding for size */
+    cursor: pointer; /* Pointer on hover */
+    font-size: 1rem; /* Text size */
+    transition: background 0.3s, color 0.3s, border-color 0.3s; /* Smooth transition */
+}
+
+.product-card button:hover {
+    background: rgba(104, 187, 89, 0.85); /* Light green hover */
+    color: #000000; /* White text */
+    border-color: #68bb59; /* Match green for border */
+}
+
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="logo-section">
+            <img src="favicon.ico" alt="Logo">
+            <h1>Canadian Power Outages</h1>
+        </div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/products.html">Products</a>
+            <a href="/recources.html">Resources</a>
+	    <a href="/sign-in.html">Account</a>
+	</nav>
+    </header>
+
+    <!-- Subtitle Section -->
+    <div class="catchphrase">
+    API Access
+    </div>
+    <!-- Discount Row -->
+    <div class="discount-row">
+        <div>Be the early bird and get a discount forever</div>
+        <div>10% off (forever)</div>
+    </div>
+
+<div class="products-container" style="display: flex; gap: 20px; justify-content: center;">
+    <!-- Basic Plan -->
+    <div class="product-card" style="display: flex; flex-direction: column;">
+        <h3 style="color: #007bff; text-align: center; font-weight: normal; margin-bottom: 10px;">Basic Plan</h3>
+        <p style="text-align: center; color: #666; margin-bottom: 10px;">Ideal for startups looking for utility data coverage.</p>
+        <div style="display: flex; justify-content: center; align-items: baseline; gap: 5px; margin-bottom: 10px;">
+            <span style="font-size: 1.4rem; color: #333;">0*</span>
+            <span style="color: #aaa; font-size: 1rem;">/month</span>
+            <span style="color: #007bff; font-size: 1rem;">(Early Bird)</span>
+        </div>
+        <p style="text-align: center; color: #aaa; font-size: 1rem; margin: 0;">*Free during pilot program</p>
+        <ul style="margin-top: 15px; text-align: left;">
+            <li>Basic data on customer impact.</li>
+	    <li>Historic data: Last 24 hours.</li>
+	    <li>Rate Limit: 1,000 requests/month.</li>
+            <li>Refresh Rate: Every 10 minutes.</li>
+        </ul>
+        <p style="text-align: center; font-weight: bold; margin-top: auto; margin-bottom: 5px;">Why Choose This Plan</p>
+        <p style="text-align: center; color: #555;">Affordable for startups with regional operations.</p>
+<button style="
+    background: #ffffff; 
+    color: #333; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    padding: 10px 20px; 
+    cursor: pointer; 
+    font-size: 1rem; 
+    transition: background 0.3s, color 0.3s, border-color 0.3s;" 
+    onmouseover="this.style.background='rgba(104, 187, 89, 0.85)'; this.style.color='#ffffff';" 
+    onmouseout="this.style.background='#ffffff'; this.style.color='#333';" 
+    onclick="location.href='sign-in.html';">
+    Get Started
+</button>
+
+    </div>
+
+    <!-- Professional Plan -->
+    <div class="product-card" style="display: flex; flex-direction: column;">
+        <h3 style="color: #007bff; text-align: center; font-weight: normal; margin-bottom: 10px;">Professional Plan</h3>
+        <p style="text-align: center; color: #666; margin-bottom: 10px;">Perfect for growing businesses needing national data.</p>
+        <div style="display: flex; justify-content: center; align-items: baseline; gap: 5px; margin-bottom: 10px;">
+            <span style="font-size: 1.4rem; color: #333;">$0*</span>
+            <span style="color: #aaa; font-size: 1rem;">/month</span>
+            <span style="color: #007bff; font-size: 1rem;">(Early Bird)</span>
+        </div>
+        <p style="text-align: center; color: #aaa; font-size: 1rem; margin: 0;">*Free with $100 refundable deposit during pilot</p>
+        <ul style="margin-top: 15px; text-align: left;">
+	    <li>All the features of the Basic plan.</li>
+	    <li>Weather warnings for proactive decision-making.</li>
+            <li>Webhooks: Up to 5 endpoints (SMS, Slack).</li>
+	    <li>Historic data: Last 48 hours.</li>
+	    <li>Rate Limit: 5,000 API requests/month.</li>
+            <li>Refresh Rate: Every 5 minutes.</li>
+        </ul>
+        <p style="text-align: center; font-weight: bold; margin-top: auto; margin-bottom: 5px;">Why Choose This Plan</p>
+        <p style="text-align: center; color: #555;">Perfect for logistics, telecom, and proactive operations.</p>
+<button style="
+    background: #ffffff; 
+    color: #333; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    padding: 10px 20px; 
+    cursor: pointer; 
+    font-size: 1rem; 
+    transition: background 0.3s, color 0.3s, border-color 0.3s;" 
+    onmouseover="this.style.background='rgba(104, 187, 89, 0.85)'; this.style.color='#ffffff';" 
+    onmouseout="this.style.background='#ffffff'; this.style.color='#333';" 
+    onclick="location.href='sign-in.html';">
+    Get Started
+</button>
+
+    </div>
+
+    <!-- Enterprise Plan -->
+    <div class="product-card" style="display: flex; flex-direction: column;">
+        <h3 style="color: #007bff; text-align: center; font-weight: normal; margin-bottom: 10px;">Enterprise Plan</h3>
+        <p style="text-align: center; color: #666; margin-bottom: 10px;">For large enterprises requiring advanced analytics.</p>
+        <div style="display: flex; justify-content: center; align-items: baseline; gap: 5px; margin-bottom: 10px;">
+            <span style="font-size: 1.2rem; color: #333;">Coming Soon</span>
+            <span style="color: #007bff; font-size: 1rem;">(Early Bird)</span>
+        </div>
+        <p style="text-align: center; color: #aaa; text-decoration: line-through; font-size: 1rem; margin: 0;"> </p>
+
+	<ul style="margin-top: 35px; text-align: left;">
+            <li>All the features of the Professional Plan.</li>
+            <li>AI powered analytics.</li>
+	    <li>Webhooks: Up to 20 endpoints.</li>
+            <li>Access to full catalogue of historic data.</li>
+	    <li>Rate Limit: Unlimited API requests/month
+	    <li>Refresh Rate: Every 5 minutes.</li>
+	    <li>Custom client requested features.</li>
+        </ul>
+        <p style="text-align: center; font-weight: bold; margin-top: auto; margin-bottom: 5px;">Why Choose This Plan</p>
+        <p style="text-align: center; color: #555;">Ideal for national-scale enterprises and agencies.</p>
+<button style="
+    background: #ffffff; 
+    color: #333; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    padding: 10px 20px; 
+    cursor: pointer; 
+    font-size: 1rem; 
+    transition: background 0.3s, color 0.3s, border-color 0.3s;" 
+    onmouseover="this.style.background='rgba(104, 187, 89, 0.85)'; this.style.color='#ffffff';" 
+    onmouseout="this.style.background='#ffffff'; this.style.color='#333';" 
+    onclick="location.href='sign-in.html';">
+    Get Started
+</button>
+
+    </div>
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>
+

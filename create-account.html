@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        /* Global styles */
+        body {
+            margin: 0;
+            font-family: "Arial", sans-serif;
+            background: linear-gradient(to bottom, #dceefd 10%, #ffffff 30%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Header styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 50%;
+            max-width: 600px;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-section img {
+            width: 28px;
+            height: 28px;
+            margin-right: 8px;
+        }
+
+        .logo-section h1 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            margin-right: 10px;
+            font-size: 0.85rem;
+            padding: 5px 7px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+ nav a:hover {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        /* Sign-in container */
+        .sign-in-container {
+            width: 350px; /* Narrower box */
+            padding: 20px;
+            background: #ffffff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        /* Welcome text */
+        .sign-in-container h1 {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        /* Input field */
+        .input-field {
+            position: relative;
+            width: 93.5%;
+            margin-bottom: 20px;
+        }
+
+        .input-field input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .input-field input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        .input-field label {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+            color: #aaa;
+            pointer-events: none;
+            transition: all 0.3s;
+        }
+
+        .input-field input:focus + label,
+        .input-field input:not(:placeholder-shown) + label {
+            top: -10px;
+left: 5px;
+            font-size: 0.9rem;
+            color: #007bff;
+        }
+
+        /* Button styles */
+        .sign-in-button {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .sign-in-button:hover {
+            background: #0056b3;
+        }
+
+        /* Sign up link */
+        .sign-up-container {
+            margin: 15px 0;
+            font-size: 0.9rem;
+            color: #000;
+        }
+
+        .sign-up-container a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .sign-up-container a:hover {
+            text-decoration: underline;
+        }
+
+        /* OR separator */
+        .or-separator {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .or-separator::before,
+        .or-separator::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #ddd;
+            margin: 0 10px;
+        }
+
+        /* Company sign-in buttons */
+        .company-buttons {
+            display: flex;
+            flex-direction: column;
+ gap: 10px;
+            margin-top: 15px;
+        }
+
+        .company-button {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #ffffff;
+            color: #333;
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.3s;
+        }
+
+        .company-button img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .company-button:hover {
+            background: #e0e0e0;
+        }
+
+	.go-back-link {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+/* Custom Input Field */
+.custom-input {
+    position: relative;
+    width: 99.5%;
+    margin-bottom: 20px;
+    background-color: #d3d3d3; /* Set background color to light gray */
+    border-radius: 5px; /* Match the input's border-radius */
+    overflow: hidden; /* Ensure the overlay doesn't spill out */
+}
+
+/* Style the Input */
+.custom-input input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    pointer-events: none;
+    background-color: transparent; /* Make input background transparent */
+    /* Remove pointer-events to allow interaction */
+    /* Use user-select to prevent text selection if needed */
+    user-select: none; /* Prevent text inside the box from being selected */
+}
+
+
+
+
+/* Pseudo-element for the transparent blue overlay */
+.custom-input::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #007bff; /* Set the background color to #007bff */
+    border-radius: 5px; /* Match the rounded rectangle shape */
+    pointer-events: none; /* Ensure it doesn't block interaction */
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.3s;
+}
+
+/* Password Requirements Box */
+.password-requirements {
+    display: none; /* Hidden by default */
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+/* Invalid and Valid Classes */
+.invalid {
+    color: red;
+}
+
+.valid {
+    color: green;
+}
+
+/* Show Password Requirements on Focus */
+.input-field input:focus ~ .password-requirements {
+    display: block; /* Show when the input is focused */
+}
+/* Password Requirements Box */
+.password-requirements {
+    display: none; /* Hidden by default */
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+/* Invalid and Valid Classes */
+.invalid {
+    color: red;
+}
+
+.valid {
+    color: green;
+}
+
+/* Remove automatic display on focus */
+.input-field input:focus ~ .password-requirements {
+    display: none; /* Ensure it doesn't show on focus */
+}
+/* Password Requirements Box */
+.password-requirements {
+    display: none; /* Hidden by default */
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    text-align: left; /* Align text to the left */
+    width: 100%; /* Adjust width as needed */
+}
+
+/* Style the requirements text */
+.password-requirements p {
+    margin: 0 0 10px 0; /* Adjust margin as needed */
+    font-weight: bold; /* Make the title bold */
+}
+
+/* Style the list */
+.password-requirements ul {
+    list-style: none; /* Remove default list style */
+    padding: 0;
+    margin: 0;
+}
+
+.password-requirements li {
+    margin: 5px 0; /* Adjust margin between list items */
+    display: flex;
+    align-items: center;
+}
+
+/* Red X and Green Checkmark */
+.invalid::before {
+    content: '✗'; /* Red X */
+    color: red;
+    margin-right: 10px;
+}
+
+.valid::before {
+    content: '✔'; /* Green Checkmark */
+    color: green;
+    margin-right: 10px;
+}
+
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="logo-section">
+            <img src="favicon.ico" alt="Logo">
+            <h1>Canadian Power Outages</h1>
+        </div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/products.html">Products</a>
+            <a href="/recources.html">Resources</a>
+	    <a href="/account.html">Account</a>
+        </nav>
+    </header>
+
+    <!-- Sign-in Container -->
+    <div class="sign-in-container">
+        <h1>Create your account</h1>
+        <form>
+            <div class="custom-input">
+                <input type="text" id="email" placeholder=" " required>
+            </div>
+ <div class="input-field">
+    <input type="password" id="password" placeholder=" " required>
+    <label for="password">Password*</label>
+    <div id="password-requirements" class="password-requirements">
+        <p>Your password must contain:</p>
+        <ul>
+            <li id="uppercase" class="invalid">1 Capital letter</li>
+            <li id="numberOrSpecial" class="invalid">1 Number or special character</li>
+            <li id="length" class="invalid">At least 12 characters</li>
+        </ul>
+    </div>
+</div>
+
+<button type="button" class="sign-in-button" id="continue-button" onclick="window.location.href='account.html'">Continue</button>
+
+            <a href="sign-up.html" class="go-back-link">Go back</a>
+        
+	</form>
+    </div>
+
+    <script>
+window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const email = urlParams.get('email');
+    if (email) {
+        document.getElementById('email').value = email;
+    }
+}
+</script>
+<script>
+document.getElementById('password').addEventListener('input', function() {
+    var password = this.value;
+    var requirementsBox = document.getElementById('password-requirements');
+    var uppercase = document.getElementById('uppercase');
+    var numberOrSpecial = document.getElementById('numberOrSpecial');
+    var length = document.getElementById('length');
+    var continueButton = document.getElementById('continue-button');
+
+    // Show the password requirements box after typing starts
+    if (password.length > 0) {
+        requirementsBox.style.display = 'block';
+    } else {
+        requirementsBox.style.display = 'none';
+    }
+
+    // Check for uppercase letter
+    var hasUppercase = /[A-Z]/.test(password);
+    if (hasUppercase) {
+        uppercase.classList.remove('invalid');
+        uppercase.classList.add('valid');
+    } else {
+        uppercase.classList.remove('valid');
+        uppercase.classList.add('invalid');
+    }
+
+    // Check for number or special character
+    var hasNumberOrSpecial = /[0-9]/.test(password) || /[^A-Za-z0-9]/.test(password);
+    if (hasNumberOrSpecial) {
+        numberOrSpecial.classList.remove('invalid');
+        numberOrSpecial.classList.add('valid');
+    } else {
+        numberOrSpecial.classList.remove('valid');
+        numberOrSpecial.classList.add('invalid');
+    }
+
+    // Check for length
+    var hasValidLength = password.length >= 12;
+    if (hasValidLength) {
+        length.classList.remove('invalid');
+        length.classList.add('valid');
+    } else {
+        length.classList.remove('valid');
+        length.classList.add('invalid');
+    }
+
+    // Enable the button only if all conditions are met
+    if (hasUppercase && hasNumberOrSpecial && hasValidLength) {
+        continueButton.disabled = false;
+    } else {
+        continueButton.disabled = true;
+    }
+});
+
+document.getElementById('continue-button').addEventListener('click', function() {
+    window.location.href = 'account.html';
+});
+</script>
+
+</body>
+</html>
