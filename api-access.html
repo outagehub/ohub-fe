@@ -319,7 +319,7 @@
     transition: background 0.3s, color 0.3s, border-color 0.3s;" 
     onmouseover="this.style.background='rgba(104, 187, 89, 0.85)'; this.style.color='#ffffff';" 
     onmouseout="this.style.background='#ffffff'; this.style.color='#333';" 
-    onclick="location.href='sign-in.html';">
+    onclick="storePlanAndRedirect('basic');">
     Get Started
 </button>
 
@@ -356,7 +356,7 @@
     transition: background 0.3s, color 0.3s, border-color 0.3s;" 
     onmouseover="this.style.background='rgba(104, 187, 89, 0.85)'; this.style.color='#ffffff';" 
     onmouseout="this.style.background='#ffffff'; this.style.color='#333';" 
-    onclick="location.href='sign-in.html';">
+    onclick="storePlanAndRedirect('professional');">
     Get Started
 </button>
 
@@ -404,6 +404,15 @@
 </div>
 
 </div>
+<script>
+    function storePlanAndRedirect(plan) {
+        console.log('Saving plan:', plan); // Debug log to verify plan type
+        localStorage.setItem('selectedPlan', plan); // Save the selected plan in local storage
+        
+        // Redirect to the sign-in page
+        window.location.href = 'sign-in.html';
+    }
+</script>
 
 </body>
 </html>

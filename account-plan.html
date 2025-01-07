@@ -38,14 +38,14 @@
             justify-content: center;
             width: 35px;
             height: 35px;
-            background-color: #e6f0ff; /* Light blue */
+            background-color: blue; /* Light blue */
             color: white;
             font-weight: bold;
             border-radius: 50%;
             cursor: pointer;
         }
         .left-column {
-            width: 20%;
+            width: 18%;
             padding: 20px;
             background-color: white;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
@@ -74,13 +74,17 @@
             font-weight: bold;
             margin-bottom: 15px;
         }
-        .formal-note {
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 20px;
-            word-wrap: break-word;
-        }
-        .section-title {
+.formal-note {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 20px;
+    word-wrap: break-word; /* Break long words */
+    white-space: normal; /* Allow line wrapping */
+    overflow: visible; /* Ensure content is not hidden */
+    line-height: 1.5; /* Add spacing between lines for clarity */
+}
+
+	.section-title {
             font-size: 16px;
             font-weight: bold;
             color: #333;
@@ -108,9 +112,8 @@
             margin-left: 20%;
             padding: 20px;
             position: relative;
-            background-color: #f5f5f5; /* Light gray background */
-            height: calc(100vh - 50px); /* Full height minus header */
-            overflow-y: auto; /* Enable scrolling for overflowing content */
+            background: linear-gradient(to bottom, #dceefd 10%, #ffffff 30%);
+            height: calc(100vh - 50px);
         }
         .progress {
             display: flex;
@@ -129,7 +132,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 30px; /* Smaller circles */
+            width: 30px;
             height: 30px;
             border-radius: 50%;
             font-weight: bold;
@@ -155,8 +158,8 @@
         .line {
             position: absolute;
             top: calc(50% - 15px); /* Align with circle centers */
-            left: calc(15% + 25px); /* Shift slightly right to center between circles */
-            right: calc(10% + 25px); /* Shift slightly right */
+            left: calc(15% + 25px);
+            right: calc(10% + 25px);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -167,6 +170,168 @@
             background-color: #ccc; /* Gray dots */
             border-radius: 50%;
         }
+        .rectangle {
+            margin-top: 40px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            position: absolute;
+            left: 50.5%; /* Center horizontally */
+            transform: translateX(-50%); /* Adjust position to be at the center */
+            width: 60%;
+	}
+        .rectangle img {
+            width: 60px;
+            height: 60px;
+            margin-right: 20px;
+        }
+        .rectangle .text-content {
+            display: flex;
+            flex-direction: column;
+        }
+        .rectangle h1 {
+            font-size: 18px;
+            margin: 0;
+            font-weight: bold;
+            color: black;
+        }
+        .rectangle h2 {
+            font-size: 20px;
+            margin: 5px 0;
+            font-weight: bold;
+            color: black;
+        }
+        .rectangle p {
+            font-size: 14px;
+            margin: 0;
+            color: black;
+        }
+	.rectangle h1 {
+    font-size: 14px; /* Smaller font size for "Pilot Program Access" */
+    margin: 0;
+    font-weight: bold;
+    color: black;
+}
+
+.rectangle h2 {
+    font-size: 16px; /* Smaller font size for "Basic Plan for API Access" */
+    margin: 5px 0;
+    font-weight: bold;
+    color: black;
+}
+
+.rectangle p {
+    font-size: 12px; /* Smaller font size for "No payment necessary" */
+    margin: 0;
+    color: black;
+}
+
+.line-break {
+    width: 100%; /* Make the line span the full width of the rectangle */
+    height: 1px; /* Thin line */
+    background-color: #ccc; /* Light gray color */
+    margin: 15px 0; /* Add some space above and below the line */
+}
+.rectangle {
+    margin-top: 40px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column; /* Stack main elements vertically */
+    align-items: flex-start; /* Align child elements to the left */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%; /* Adjust rectangle width */
+}
+
+.text-wrapper {
+    display: flex; /* Use flex to align favicon and text-content */
+    align-items: center; /* Align favicon and text vertically */
+    width: 100%; /* Full width */
+    margin-bottom: 15px; /* Add space below text content */
+}
+
+.text-wrapper img {
+    width: 60px;
+    height: 60px;
+    margin-right: 20px; /* Space between favicon and text */
+}
+
+.line-break {
+    width: 100%; /* Make the line span the full width of the rectangle */
+    height: 1px;
+    background-color: #ccc;
+    margin: 15px 0;
+}
+.text-wrapper {
+    display: flex; /* Align favicon and text horizontally */
+    align-items: center; /* Vertically center-align text with the favicon */
+    width: 100%; /* Full width */
+    margin-bottom: 15px; /* Space below text content */
+}
+
+.text-wrapper img {
+    width: 100px; /* Larger favicon size */
+    height: 100px; /* Ensure it remains a square */
+    margin-right: 20px; /* Space between favicon and text */
+}
+
+.text-content {
+    display: flex;
+    flex-direction: column; /* Stack the text vertically */
+}
+
+.text-content h1 {
+    font-size: 16px; /* "Pilot Program Access" */
+    margin: 0;
+    font-weight: bold;
+    color: #f8a824;
+}
+
+.text-content h2 {
+    font-size: 18px; /* "Basic Plan for API Access" */
+    margin: 5px 0;
+    font-weight: bold;
+    color: black;
+}
+
+.text-content p {
+    font-size: 14px; /* "No payment necessary" */
+    margin: 0;
+    color: black;
+}
+
+.line-break {
+    width: 100%; /* Full width of rectangle */
+    height: 1px; /* Thin line */
+    background-color: #ccc; /* Light gray */
+    margin: 15px 0; /* Space above and below the line */
+}
+
+.continue-button {
+    display: block; /* Makes the button a block-level element */
+    margin: 20px auto; /* Auto margins center the button horizontally */
+    background-color: white; /* White background */
+    color: black; /* Black text */
+    border: 2px solid black; /* Black border */
+    padding: 10px 20px; /* Button padding */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for color changes */
+}
+
+.continue-button:hover {
+    background-color: #28a745; /* Black background on hover */
+    color: white; /* White text on hover */
+}
+
     </style>
 </head>
 <body>
@@ -177,40 +342,163 @@
         </div>
         <div class="user-circle">AG</div>
     </header>
-    <div class="left-column">
+
+    <div class="left-column" id="planSidebar"></div>
+
+    <div class="window">
+        <div id="planContent"></div>
+    </div>
+
+    <script>
+        // Get the selected plan from local storage
+        const selectedPlan = localStorage.getItem('selectedPlan');
+
+        const planSidebar = document.getElementById('planSidebar');
+        const planContent = document.getElementById('planContent');
+
+        if (selectedPlan === 'basic') {
+            // Basic Plan Sidebar
+            planSidebar.innerHTML = `
+                <div class="small-text">You are Purchasing</div>
+                <div class="medium-text">Basic Plan for API Access</div>
+                <div class="highlight">Free during Pilot Program</div>
+                <div class="formal-note">
+                    The pilot program will end once agreements with power companies are finalized.
+                </div>
+                <div class="section-title">Included</div>
+                <ul class="features">
+                    <li>Basic data on customer impact.</li>
+                    <li>Historic data: Last 24 hours.</li>
+                    <li>Rate Limit: 1,000 requests/month.</li>
+                    <li>Refresh Rate: Every 10 minutes.</li>
+                </ul>
+            `;
+
+            // Basic Plan Content
+            planContent.innerHTML = `
+                <div class="rectangle">
+                    <div class="text-wrapper">
+                        <img src="favicon.ico" alt="Favicon">
+                        <div class="text-content">
+                            <h1>Pilot Program Access</h1>
+                            <h2>Basic Plan for API Access</h2>
+                            <p>No payment necessary</p>
+                        </div>
+                    </div>
+                    <div class="line-break"></div>
+                    <p style="font-size: 12px; margin: 10px 0; color: black; line-height: 1.5;">
+                        By proceeding, you agree to the terms outlined in the subscription agreement. You will be notified of any changes before they take effect. This plan is offered under the pilot program and may be subject to revisions based on feedback and service updates. By continuing, you confirm that you have reviewed the terms and understand the conditions of this offering. Your participation helps us improve our services for future releases.
+                    </p>
+                    <div class="line-break"></div>
+                    <a href="get-started.html" class="continue-button">Continue</a>
+                </div>
+            `;
+        } else if (selectedPlan === 'professional') {
+    // Professional Plan Sidebar
+    planSidebar.innerHTML = `
         <div class="small-text">You are Purchasing</div>
-        <div class="medium-text">Basic Plan for API Access</div>
-        <div class="highlight">Free during Pilot Program</div>
+        <div class="medium-text">Professional Plan for API Access</div>
+        <div class="highlight">Free with $100 Refundable Deposit During Pilot</div>
         <div class="formal-note">
             The pilot program will end once agreements with power companies are finalized.
         </div>
         <div class="section-title">Included</div>
         <ul class="features">
-            <li>Basic data on customer impact.</li>
-            <li>Historic data: Last 24 hours.</li>
-            <li>Rate Limit: 1,000 requests/month.</li>
-            <li>Refresh Rate: Every 10 minutes.</li>
+            <li>All the features of the Basic plan.</li>
+            <li>Weather warnings for proactive decision-making.</li>
+            <li>Webhooks: Up to 5 endpoints (SMS, Slack).</li>
+            <li>Historic data: Last 48 hours.</li>
+            <li>Rate Limit: 5,000 requests/month.</li>
+            <li>Refresh Rate: Every 5 minutes.</li>
         </ul>
-    </div>
-    <div class="window">
-        <div class="progress">
-            <div class="step-container">
-                <div class="circle circle-1">1</div>
-                <div class="step-label">Confirm Subscription</div>
-            </div>
-            <div class="line">
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-            </div>
-            <div class="step-container">
-                <div class="circle circle-2">2</div>
-                <div class="step-label gray">Get Started</div>
+    `;
+
+    // Professional Plan Content
+    planContent.innerHTML = `
+        <!-- Confirm Subscription Rectangle -->
+        <div class="rectangle">
+            <div class="text-wrapper">
+                <img src="favicon.ico" alt="Favicon">
+                <div class="text-content">
+                    <h1>Confirm Subscription</h1>
+                    <h2>Pilot Program Access</h2>
+                    <h2>Professional Plan for API Access</h2>
+                    <p>Free with $100 refundable deposit during pilot</p>
+                </div>
             </div>
         </div>
-    </div>
+        
+        <!-- Payment Information Rectangle -->
+        <div class="rectangle">
+            <div class="text-wrapper">
+                <div class="text-content">
+                    <h1>Payment Information</h1>
+                    <form id="payment-form">
+                        <div id="card-element">
+                          <!-- A Stripe Element will be inserted here. -->
+                        </div>
+                        <button id="submit-button" class="btn btn-primary">Submit Payment</button>
+                    </form>
+                    <div id="card-errors" role="alert"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Information Rectangle -->
+        <div class="rectangle">
+            <p style="font-size: 12px; margin: 10px 0; color: black; line-height: 1.5;">
+                By proceeding, you agree to the terms outlined in the subscription agreement. You will be notified of any changes before they take effect. This plan is offered under the pilot program and may be subject to revisions based on feedback and service updates. By continuing, you confirm that you have reviewed the terms and understand the conditions of this offering. Your participation helps us improve our services for future releases.
+            </p>
+            <a href="get-started.html" class="btn btn-success continue-button">Continue</a>
+        </div>
+    `;
+
+    // Include Stripe.js
+    const stripeScript = document.createElement('script');
+    stripeScript.src = 'https://js.stripe.com/v3/';
+    document.head.appendChild(stripeScript);
+
+    stripeScript.onload = function() {
+        var stripe = Stripe('your-publishable-key-here');
+        var elements = stripe.elements();
+        var card = elements.create('card');
+        card.mount('#card-element');
+
+        var form = document.getElementById('payment-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            stripe.createToken(card).then(function(result) {
+                if (result.error) {
+                    // Inform the user if there was an error.
+                    var errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = result.error.message;
+                } else {
+                    // Send the token to your server.
+                    stripeTokenHandler(result.token);
+                }
+            });
+        });
+    };
+
+    function stripeTokenHandler(token) {
+        // Insert the token ID into the form so it gets submitted to the server
+        var form = document.getElementById('payment-form');
+        var hiddenInput = document.createElement('input');
+        hiddenInput.setAttribute('type', 'hidden');
+        hiddenInput.setAttribute('name', 'stripeToken');
+        hiddenInput.setAttribute('value', token.id);
+        form.appendChild(hiddenInput);
+
+        // Submit the form
+        form.submit();
+    }
+}
+ 
+
+
+
+    </script>
 </body>
 </html>
 

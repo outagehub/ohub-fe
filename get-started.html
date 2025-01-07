@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic API Access Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            background-color: white;
+            padding: 10px 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .favicon {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .header-right {
+            position: relative;
+        }
+
+        .profile-container {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .profile-circle {
+            width: 35px;
+            height: 35px;
+            background-color: #0078d4;
+            color: white;
+            font-weight: bold;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            z-index: 1000;
+            width: 150px;
+        }
+
+        .dropdown-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .dropdown-menu li {
+            padding: 10px 15px;
+            font-size: 14px;
+            color: #333;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .dropdown-menu li:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-menu li:hover {
+            background-color: #f5f5f5;
+        }
+
+        .dropdown-menu a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .profile-container:focus-within .dropdown-menu,
+        .profile-container:hover .dropdown-menu {
+            display: block;
+        }
+
+        .container {
+            display: flex;
+            height: calc(100vh - 50px);
+            background: linear-gradient(to bottom, #dceefd 10%, #ffffff 30%);
+        }
+
+        .left-column {
+            width: 15%;
+            background-color: white;
+            padding: 20px;
+            border-right: 1px solid #ccc;
+            overflow-y: auto;
+        }
+
+        .left-column h1 {
+            font-size: 16px;
+            color: black;
+            margin-bottom: 20px;
+        }
+
+        .left-column .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: black;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .left-column ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .left-column li {
+            font-size: 14px;
+            color: gray;
+            margin-left: 10px;
+            cursor: pointer;
+            margin-bottom: 5px;
+        }
+
+        .left-column li:hover {
+            text-decoration: underline;
+        }
+
+        .left-column .divider {
+            border: 0;
+            border-top: 1px solid #ccc;
+            margin: 15px 0;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .graphic-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .graphic {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            height: 300px;
+            transition: background-color 0.2s ease;
+        }
+
+        .graphic:hover {
+            background-color: #f5f5f5;
+        }
+
+        .graphic-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 220px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .reveal-button {
+            background-color: white;
+            color: black;
+            border: 1px solid black;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .reveal-button:hover {
+            background-color: #0078d4;
+            color: white;
+        }
+
+	.graphic {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    height: 300px;
+    transition: all 0.2s ease; /* Smooth animation */
+    border: 1px solid #ccc; /* Add a subtle gray border */
+}
+
+.graphic:hover {
+    transform: translateY(-5px); /* Move the rectangle upward */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Increase shadow for a pop-out effect */
+    border-color: #aaa; /* Darken the border on hover */
+}
+.graphic {
+    background-color: white; /* Static background color */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    height: 300px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; /* Smooth animation */
+    border: 1px solid #ccc; /* Light gray border */
+}
+
+.graphic:hover {
+    transform: translateY(-5px); /* Move the rectangle upward */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Increase shadow for a pop-out effect */
+    border-color: #aaa; /* Darken the border on hover */
+}
+header {
+    background-color: white;
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ccc; /* Add gray border to the header */
+}
+
+.graphic {
+    background-color: white; /* Keep the background static */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    height: 300px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth animation */
+    border: 1px solid #ccc; /* Light gray border */
+    position: relative;
+}
+
+.graphic:hover {
+    transform: translateY(-3px); /* Slight lift on hover */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Enhance shadow for depth */
+    border-color: #aaa; /* Slightly darker border on hover */
+    background-color: white; /* Ensure no background color change */
+}
+
+.graphic::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    transition: opacity 0.2s ease; /* Smooth overlay effect */
+    opacity: 0; /* Hidden by default */
+    border-radius: 8px;
+}
+
+.graphic:hover::after {
+    opacity: 1; /* Show gray overlay on hover */
+}
+.map-container {
+    width: 100%;
+    height: 280px; /* Increase the height */
+    border-radius: 8px;
+    overflow: hidden;
+}
+.left-column h1 {
+    font-size: 18px;
+    color: black;
+    margin-top: 0px;
+    margin-bottom: 20px;
+    font-weight: normal; /* Makes the text not bold */
+}
+.profile-container {
+    position: relative;
+    cursor: pointer;
+}
+
+.profile-container:hover .dropdown-menu,
+.dropdown-menu:hover {
+    display: block; /* Keep the dropdown visible when hovering over it */
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 45px;
+    right: 0;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 1000;
+    width: 150px;
+}
+.profile-container {
+    position: relative;
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    display: none; /* Initially hidden */
+    position: absolute;
+    top: 45px; /* Position below the profile picture */
+    right: 0;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 1000;
+    width: 150px;
+}
+
+.profile-container:hover .dropdown-menu,
+.dropdown-menu:hover {
+    display: block; /* Keep visible when hovering over profile picture or dropdown */
+}
+
+.dropdown-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-menu li {
+    padding: 10px 15px;
+    font-size: 14px;
+    color: #333;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.dropdown-menu li:last-child {
+    border-bottom: none;
+}
+
+.dropdown-menu li:hover {
+    background-color: #f5f5f5;
+}
+
+.dropdown-menu a {
+    text-decoration: none;
+    color: #333;
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <img src="favicon.ico" alt="Favicon" class="favicon">
+            <div class="title">Canadian Power Outages</div>
+        </div>
+        <div class="header-right">
+            <div class="profile-container" tabindex="0">
+                <div class="profile-circle">AG</div>
+                <div class="dropdown-menu">
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Product</a></li>
+                        <li><a href="#">Resources</a></li>
+                        <li><a href="#">Account</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <div class="left-column">
+            <h1>Documentation</h1>
+            <div class="section-title">Start</div>
+            <ul>
+		<li>Quick Start Guide</li>
+                <li>Features</li>
+                <li>Configuration</li>
+                <li>Authentication</li>
+                <li>Account</li>
+            </ul>
+            <hr class="divider">
+            <div class="section-title">Develop Guide</div>
+            <ul>
+                <li>Query by Lat and Long</li>
+                <li>Query by Address</li>
+                <li>Query Historic Outages</li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="page-title">API Dashboard for Basic Plan</div>
+            <div class="graphic-container">
+                <div class="graphic">
+                    <div class="graphic-title">Queries This Month</div>
+                    <canvas id="pieChart" style="max-width: 200px; margin: auto;"></canvas>
+                    <div class="graphic-data">512 / 1000</div>
+                </div>
+                <div class="graphic">
+                    <div class="graphic-title">Query Timeline</div>
+                    <canvas id="queryTimeline"></canvas>
+                </div>
+                <div class="graphic">
+                    <div class="graphic-title">Detected API Call Outages</div>
+                    <div id="map" class="map-container"></div>
+                </div>
+                <div class="graphic">
+                    <div class="graphic-title">API Key</div>
+                    <button class="reveal-button" id="revealButton" onclick="toggleApiKey()">Reveal</button>
+                    <div id="apiKey" style="margin-top: 10px; display: none;">API_KEY_123456789</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Render Pie Chart
+        const pieCtx = document.getElementById('pieChart').getContext('2d');
+        new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Used Calls', 'Remaining Calls'],
+                datasets: [{
+                    data: [512, 488],
+                    backgroundColor: ['#0078d4', '#f5f5f5'],
+                }]
+            },
+            options: {
+                responsive: true,
+            }
+        });
+
+        // Render Line Graph for Query Timeline
+        const lineCtx = document.getElementById('queryTimeline').getContext('2d');
+        new Chart(lineCtx, {
+            type: 'line',
+            data: {
+                labels: ['12/01', '12/02', '12/03', '12/04', '12/05', '12/06', '12/07'],
+                datasets: [{
+                    label: 'API Calls',
+                    data: [150, 200, 170, 300, 250, 400, 512],
+                    borderColor: '#0078d4',
+                    borderWidth: 2,
+                    fill: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date',
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'API Calls',
+                        },
+                        beginAtZero: true,
+                        max: 1000,
+                    }
+                }
+            }
+        });
+
+        // Initialize Leaflet map
+        const map = L.map('map').setView([46.8, -71.2], 6);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors',
+			    opacity: 0.7,
+        }).addTo(map);
+
+const heat = L.heatLayer([
+    [45.5, -73.6, 1.5], 
+    [43.7, -79.4, 1.2], 
+    [46.8, -71.2, 1.0], 
+    [44.23, -76.49, 0.8], 
+    [48.4, -89.2, 0.7], 
+    [47.4, -75.2, 1.3], 
+    [43.2, -80.5, 1.1], 
+    [45.8, -74.9, 1.7],
+], {
+    radius: 25, // Adjust to make the heat spots larger
+    blur: 15, // Sharpen the edges of the heat map
+    max: 1000.0, // Scale intensity globally
+    gradient: { 
+        0.1: 'darkred', 
+        0.5: 'red', 
+        1.0: 'yellow' 
+    }
+}).addTo(map);
+
+        // Reveal/Hide API Key
+        function toggleApiKey() {
+            const apiKeyElement = document.getElementById('apiKey');
+            const button = document.getElementById('revealButton');
+            if (apiKeyElement.style.display === 'none') {
+                apiKeyElement.style.display = 'block';
+                button.textContent = 'Hide';
+            } else {
+                apiKeyElement.style.display = 'none';
+                button.textContent = 'Reveal';
+            }
+        }
+    </script>
+</body>
+</html>
+

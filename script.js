@@ -12,7 +12,7 @@ function formatTimestamp(dateInput, powerCompany) {
         }
         date = new Date(timestamp);
     } else if (
-        ["Quebec Hydro", "Manitoba Hydro", "Algoma Power", "EPCOR Ontario", 
+        ["Quebec Hydro", "Hydro Ottawa", "Manitoba Hydro", "Algoma Power", "EPCOR Ontario", 
         "Equs Alberta", "FortisBC", "Hydro Ottawa", "ENMAX Calgary", "Hydro One", "Elexicon Energy", "Toronto Hydro"].includes(powerCompany)
     ) {
         date = new Date(dateInput);
@@ -108,7 +108,7 @@ function displayOutages(outages, map) {
         }
 
         // Handle coordinate swapping for Hydro One
-        if (outage.power_company === "Hydro One") {
+        if (outage.power_company === "Hydro One" || outage.power_company === "Hydro Ottawa") {
             const temp = outage.latitude;
             outage.latitude = outage.longitude;
             outage.longitude = temp;
@@ -148,7 +148,7 @@ function displayOutages(outages, map) {
 
         // Add polygons if they exist
         if (
-            outage.power_company !== "Hydro One" &&
+            outage.power_company !== "Hydro One" && outage.power_company !== "Hydro Ottawa" &&
             Array.isArray(outage.polygon) &&
             outage.polygon.length > 0
         ) {
@@ -219,7 +219,7 @@ function displayOutages(outages, map) {
         }
 
         // Handle coordinate swapping for Hydro One
-        if (outage.power_company === "Hydro One") {
+        if (outage.power_company === "Hydro One" || outage.power_company === "Hydro Ottawa") {
             const temp = outage.latitude;
             outage.latitude = outage.longitude;
             outage.longitude = temp;
@@ -259,7 +259,7 @@ function displayOutages(outages, map) {
 
         // Add polygons if they exist
         if (
-            outage.power_company !== "Hydro One" &&
+            outage.power_company !== "Hydro One" && outage.power_company !== "Hydro Ottawa" &&
             Array.isArray(outage.polygon) &&
             outage.polygon.length > 0
         ) {
@@ -618,36 +618,40 @@ picker.hide();
     // Show spinner during fetch
     spinner.style.display = "inline-block";
 
-    // Fetch and display outages
-    try {
-      const response = await fetch(
-        `/slide_outages?timestamp=${encodeURIComponent(date.toISOString())}`
-      );
+try {
+  const response = await fetch(
+    `/slide_outages?timestamp=${encodeURIComponent(date.toISOString())}`
+  );
 
-      if (!response.ok) {
-        throw new Error(`Failed to fetch outages: ${response.statusText}`);
-      }
+  if (!response.ok) {
+    throw new Error(`Failed to fetch outages: ${response.statusText}`);
+  }
 
-      const data = await response.json();
+  const data = await response.json();
 
-      if (data.error) {
-        console.error(`API Error: ${data.error}`);
-        return;
-      }
+  // Log the raw response from the backend
+  console.log("Raw data fetched from backend:", data);
 
-      const outages = data.outages || [];
-      console.log(`Fetched ${outages.length} outages for ${date}`);
+  if (data.error) {
+    console.error(`API Error: ${data.error}`);
+    return;
+  }
 
-      // Clear and update the map
-      clearMap(map);
-      displayOutages(outages, map);
-    } catch (error) {
-      console.error(`Error fetching outages: ${error}`);
-    } finally {
-      // Hide spinner after fetch completes
-      spinner.style.display = "none";
-    }
-  },
+	const outages = Array.isArray(data) ? data : data.outages || [];
+
+  console.log(`Parsed outages array:`, outages);
+  console.log(`Fetched ${outages.length} outages for ${date}`);
+
+  // Clear and update the map
+  clearMap(map);
+  displayOutages(outages, map);
+} catch (error) {
+  console.error(`Error fetching outages: ${error}`);
+} finally {
+  // Hide spinner after fetch completes
+  spinner.style.display = "none";
+}
+},
 });
 
 // Ensure the picker works on button click
